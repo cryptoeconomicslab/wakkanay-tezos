@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "conseiljs": "^0.3.1",
-    "wakkanay": "git+https://github.com/cryptoeconomicslab/wakkanay.git"
+    "wakkanay": "git+https://github.com/cryptoeconomicslab/wakkanay.git#master"
   },
   "devDependencies": {
     "@types/jest": "^24.0.20",
