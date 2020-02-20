@@ -42,9 +42,10 @@ export class TezosBlockInfoProvider implements BlockInfoProvider {
     contractAddress: string
   ): Promise<MichelinePrim> {
     const contract = await TezosNodeReader.getAccountForBlock(
-      this.conseilServerInfo.url,
+      'https://tezos-dev.cryptonomic-infra.tech',
+      //      this.conseilServerInfo.url,
       level.toString(),
-      contractAddress
+      'KT1UxjVKVMsKRkwvG9XPqXBRNP8t3rqnmq3J'
     )
     if (!contract.script) {
       throw new Error('script must not be undefined')
@@ -56,3 +57,4 @@ export class TezosBlockInfoProvider implements BlockInfoProvider {
     // throw Error('Not implemented')
   }
 }
+// curl https://tezos-dev.cryptonomic-infra.tech/chains/main/blocks/307791/context/contracts/KT1UxjVKVMsKRkwvG9XPqXBRNP8t3rqnmq3J/storage

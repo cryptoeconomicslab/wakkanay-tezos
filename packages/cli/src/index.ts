@@ -1,4 +1,6 @@
-import { TezosWalletUtil } from 'conseiljs'
+import { TezosMessageUtils, TezosWalletUtil } from 'conseiljs'
+import { config } from 'dotenv'
+config()
 import LightClient, {
   StateManager,
   SyncManager,
@@ -14,9 +16,8 @@ import {
   ERC20Contract,
   OwnershipPayoutContract
 } from '@cryptoeconomicslab/tezos-contract'
-import * as TzCoder from '@cryptoeconomicslab/tezos-coder'
+import { TzCoder } from '@cryptoeconomicslab/tezos-coder'
 import { setupContext } from '@cryptoeconomicslab/context'
-
 setupContext({
   coder: TzCoder
 })
@@ -28,15 +29,17 @@ async function instantiate() {
   // TODO: fix light client interface
   const network = process.env.TEZOS_NETWORK || 'babylonnet'
   const apiKey = process.env.TEZOS_APIKEY || 'hooman'
+  const url = process.env.MAIN_CHAIN_HOST
+  if (!url) {
+    throw new Error('must require MAIN_CHAIN_HOST')
+  }
   const wallet = new TzWallet(
-    await TezosWalletUtil.restoreIdentityWithSecretKey(
-      process.env.AGGREGATOR_PRIVATE_KEY ||
-        'edskRpVqFG2FHo11aB9pzbnHBiPBWhNWdwtNyQSfEEhDf5jhFbAtNS41vg9as7LSYZv6rEbtJTwyyEg9cNDdcAkSr9Z7hfvquB'
-    ),
+    await TezosWalletUtil.restoreIdentityWithSecretKey(process.env
+      .PRIVATE_KEY as string),
     {
-      url: process.env.MAIN_CHAIN_HOST as string,
-      apiKey: apiKey,
-      network: network
+      url,
+      apiKey,
+      network
     }
   )
 
@@ -97,9 +100,23 @@ async function instantiate() {
 
 export default async function initialize() {
   const lightClient = await instantiate()
+  lightClient.registerToken(
+    '0x01df89eeeeebf54451fac43136cb115607773acf4700',
+    '0x01df89eeeeebf54451fac43136cb115607773acf4700'
+  )
+  console.log('start')
   await lightClient.start()
+  console.log('started')
 
   return lightClient
 }
 
-initialize().then()
+initialize().then(async lightClient => {
+  await lightClient.deposit(
+    1,
+    '0x01df89eeeeebf54451fac43136cb115607773acf4700'
+    //    TezosMessageUtils.writeAddress('KT1UxjVKVMsKRkwvG9XPqXBRNP8t3rqnmq3J')
+    // TezosMessageUtils.writeAddress('tz1XuAz2HmWNMXKSV9GTx9zvo6w9Ngr8LWkW')
+  )
+  console.log('deposited')
+})

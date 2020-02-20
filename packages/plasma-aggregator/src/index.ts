@@ -1,4 +1,4 @@
-import { TezosWalletUtil } from 'conseiljs'
+import { TezosMessageUtils, TezosWalletUtil } from 'conseiljs'
 import { Address, Bytes } from '@cryptoeconomicslab/primitives'
 import { RangeDb } from '@cryptoeconomicslab/db'
 import { InMemoryKeyValueStore } from '@cryptoeconomicslab/level-kvs'
@@ -15,6 +15,8 @@ import Aggregator, {
   StateManager
 } from '@cryptoeconomicslab/plasma-aggregator'
 import fs from 'fs'
+import { config } from 'dotenv'
+config()
 
 setupContext({
   coder: TzCoder
@@ -23,13 +25,17 @@ setupContext({
 const instantiate = async (): Promise<Aggregator> => {
   const kvs = new InMemoryKeyValueStore(Bytes.fromString('aaaaa'))
   await kvs.open()
+  const url = process.env.MAIN_CHAIN_HOST
   const network = process.env.TEZOS_NETWORK || 'babylonnet'
   const apiKey = process.env.TEZOS_APIKEY || 'hooman'
+  if (!url) {
+    throw new Error('must require MAIN_CHAIN_HOST')
+  }
   const wallet = new TzWallet(
     await TezosWalletUtil.restoreIdentityWithSecretKey(process.env
       .AGGREGATOR_PRIVATE_KEY as string),
     {
-      url: process.env.MAIN_CHAIN_HOST as string,
+      url: url,
       apiKey: apiKey,
       network: network
     }

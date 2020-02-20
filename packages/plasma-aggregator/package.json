@@ -57,6 +57,7 @@
     "@cryptoeconomicslab/tezos-contract": "^0.0.8",
     "@cryptoeconomicslab/tezos-wallet": "^0.0.8",
     "conseiljs": "^0.3.7",
+    "dotenv": "^8.2.0",
     "tslib": "^1.10.0"
   },
   "peerDependencies": {

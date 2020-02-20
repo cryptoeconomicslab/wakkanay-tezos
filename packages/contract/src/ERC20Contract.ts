@@ -35,79 +35,10 @@ export class ERC20Contract implements IERC20Contract {
     })
   }
 
-  approve(
+  async approve(
     spender: Address,
     amount: import('@cryptoeconomicslab/primitives').Integer
   ): Promise<void> {
-    throw new Error('Method not implemented.')
+    return
   }
-
-  /*
-  async submit(blockNumber: BigNumber, root: Bytes) {
-    const param = {
-      prim: 'Right',
-      args: [
-        {
-          prim: 'Pair',
-          args: [
-            { int: `'${blockNumber}'` },
-            { bytes: `'${removeBytesPrefix(root)}'` }
-          ]
-        }
-      ]
-    }
-    await this.connection.invokeContract(0, 'main', JSON.stringify(param))
-  }
-
-  async getCurrentBlock(): Promise<BigNumber> {
-    const events = await this.eventWatcher.getEventStorage(
-      EventType.BLOCK_SUBMITED
-    )
-    let latestBlockNo = 0
-    events.map(e => {
-      // remove 05
-      const blockNo = this.getBlockNoFromHex(e.args[1][0].slice(2))
-      if (latestBlockNo < blockNo) latestBlockNo = blockNo
-    })
-    return BigNumber.fromString(latestBlockNo.toString())
-  }
-
-  async getRoot(blockNumber: BigNumber): Promise<Bytes> {
-    const events = await this.eventWatcher.getEventStorage(
-      EventType.BLOCK_SUBMITED
-    )
-    events.filter(e => {
-      // remove 05
-      const blockNo = this.getBlockNoFromHex(e.args[1][0].slice(2))
-      return blockNo.toString() === blockNumber.toString()
-    })
-    return Bytes.fromHexString(events[0].args[1][1])
-  }
-
-  subscribeBlockSubmitted(
-    handler: (blockNumber: BigNumber, root: Bytes) => void
-  ) {
-    this.eventWatcher.subscribe(EventType.BLOCK_SUBMITED, (log: EventLog) => {
-      const blockNumber = log.values[0].int
-      const root = log.values[1].bytes
-      handler(
-        BigNumber.fromString(blockNumber.toString()),
-        // remove 05
-        Bytes.fromHexString(root.slice(2))
-      )
-    })
-    this.eventWatcher.cancel()
-    this.eventWatcher.start(() => {
-      console.log('event polled')
-    })
-  }
-
-  private getBlockNoFromHex(hex: string): number {
-    return Number(
-      (JSON.parse(
-        TezosLanguageUtil.hexToMicheline(hex).code
-      ) as MichelineNumber).int
-    )
-  }
-  */
 }

@@ -4,7 +4,8 @@ import {
   OperationResult,
   TezosConseilClient,
   TezosNodeWriter,
-  TezosParameterFormat
+  TezosParameterFormat,
+  TezosMessageUtils
 } from 'conseiljs'
 import { TzWallet } from '../'
 
@@ -46,9 +47,10 @@ export class ContractManager {
 
     const fee: number = await this.estimateFee()
     const result = await TezosNodeWriter.sendContractInvocationOperation(
-      this.tzWallet.conseilServerInfo.url,
+      'https://tezos-dev.cryptonomic-infra.tech',
+      //      this.tzWallet.conseilServerInfo.url,
       this.tzWallet.keyStore,
-      this.contractAddress.raw,
+      TezosMessageUtils.readAddress(this.contractAddress.data.substr(2)),
       amount,
       fee,
       derivationPath,

@@ -41,7 +41,7 @@ export type TzEventWatcherArgType = {
   blockInfoProvider?: BlockInfoProvider
 }
 
-const DEFAULT_INTERVAL = 1000
+const DEFAULT_INTERVAL = 2000
 
 export default class EventWatcher implements IEventWatcher {
   public blockInfoProvider: BlockInfoProvider
@@ -85,9 +85,12 @@ export default class EventWatcher implements IEventWatcher {
       )
       // TODO: enter the topic
       // ethereum topic is the contract address
-      const latestBlock = await this.eventDb.getLastLoggedBlock(
+      let latestBlock = await this.eventDb.getLastLoggedBlock(
         Bytes.fromString('topic')
       )
+      if (latestBlock == 0) {
+        latestBlock = block.level - 1
+      }
       await this.poll(latestBlock + 1, block.level, handler)
     } catch (e) {
       console.log(e)
@@ -165,17 +168,16 @@ export default class EventWatcher implements IEventWatcher {
       this.blockInfoProvider.conseilServerInfo,
       this.blockInfoProvider.conseilServerInfo.network
     )
-    const storage = this.parseStorage(
-      await this.blockInfoProvider.getContractStorage(
-        block.level,
-        this.contractAddress
-      )
+    const storage = await this.blockInfoProvider.getContractStorage(
+      block.level,
+      this.contractAddress
     )
-    storage.filter((e: MichelinePrim) => {
-      return (e.args[0] as MichelineString).string === eventType.toString()
-    })
-
-    return storage[0].args[1] as MichelinePrim[]
+    const eventStorage = this.parseStorage(storage).filter(
+      (e: MichelinePrim) => {
+        return (e.args[0] as MichelineString).string === eventType.toString()
+      }
+    )
+    return eventStorage[0].args[1] as MichelinePrim[]
   }
 
   /**

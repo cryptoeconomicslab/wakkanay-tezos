@@ -96,6 +96,7 @@ export class DepositContract implements IDepositContract {
         }
       ]
     }
+    console.log('invokeContract', JSON.stringify(param))
     await this.connection.invokeContract(
       amount.data,
       'main',

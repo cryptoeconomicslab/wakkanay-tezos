@@ -17,7 +17,9 @@ export class TzWallet implements Wallet {
   ) {}
 
   public getAddress(): Address {
-    return Address.from(this.keyStore.publicKeyHash)
+    return Address.from(
+      '0x' + TezosMessageUtils.writeAddress(this.keyStore.publicKeyHash)
+    )
   }
 
   public async getL1Balance(): Promise<Balance> {

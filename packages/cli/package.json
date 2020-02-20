@@ -24,6 +24,7 @@
   "scripts": {
     "build": "tsc --build",
     "build:check": "tsc --noEmit",
+    "start": "node lib/index",
     "test": "jest",
     "lint": "eslint --ext ts,tsx src",
     "lint:fix": "eslint --ext ts,tsx src --fix",

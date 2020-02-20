@@ -8,7 +8,9 @@
     "clean": "lerna run clean",
     "publish": "lerna run build && lerna publish"
   },
-  "dependencies": {},
+  "dependencies": {
+    "dotenv": "^8.2.0"
+  },
   "devDependencies": {
     "@types/jest": "^24.0.20",
     "@types/node": "^12.12.9",

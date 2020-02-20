@@ -41,6 +41,7 @@ export function encodeInnerToMichelinePrimItem(
   } else if (c === 'BigNumber') {
     return { int: String(input) }
   } else if (c === 'Address') {
+    if (input.substr(0, 2) == '0x') input = input.substr(2)
     return { bytes: input }
   } else if (c === 'Bytes') {
     return {
