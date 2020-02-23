@@ -112,6 +112,7 @@ export default async function initialize() {
 }
 
 initialize().then(async lightClient => {
+  console.log('deposit')
   await lightClient.deposit(
     1,
     '0x01df89eeeeebf54451fac43136cb115607773acf4700'

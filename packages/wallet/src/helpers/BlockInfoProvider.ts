@@ -57,4 +57,4 @@ export class TezosBlockInfoProvider implements BlockInfoProvider {
     // throw Error('Not implemented')
   }
 }
-// curl https://tezos-dev.cryptonomic-infra.tech/chains/main/blocks/307791/context/contracts/KT1UxjVKVMsKRkwvG9XPqXBRNP8t3rqnmq3J/storage
+// curl https://tezos-dev.cryptonomic-infra.tech/chains/main/blocks/314580/context/contracts/KT1UxjVKVMsKRkwvG9XPqXBRNP8t3rqnmq3J/storage

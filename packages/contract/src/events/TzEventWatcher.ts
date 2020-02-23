@@ -114,7 +114,8 @@ export default class EventWatcher implements IEventWatcher {
     blockNumber: number,
     completedHandler: CompletedHandler
   ) {
-    for (let i = fromBlockNumber; i < blockNumber; i++) {
+    console.log('from to:', fromBlockNumber, blockNumber)
+    for (let i = fromBlockNumber; i <= blockNumber; i++) {
       let events: MichelinePrim[]
       try {
         const storage = await this.blockInfoProvider.getContractStorage(
@@ -129,6 +130,7 @@ export default class EventWatcher implements IEventWatcher {
         const seen = await this.eventDb.getSeen(this.getHash(e))
         return !seen
       })
+      console.log('filtered:', JSON.stringify(filtered))
       filtered.map(async (e: MichelinePrim | symbol) => {
         e = e as MichelinePrim
         const eventName = (e.args[0] as MichelineString).string
@@ -136,12 +138,24 @@ export default class EventWatcher implements IEventWatcher {
         if (handler) {
           const args = e.args[1] as MichelinePrim[]
           args.forEach(arg => {
-            const values = ((arg as MichelinePrim).args[1] as any[]).map(
-              b =>
-                JSON.parse(
-                  TezosLanguageUtil.hexToMicheline(b.bytes).code
-                ) as MichelinePrimItem
-            )
+            const values = ((arg as MichelinePrim).args[1] as any[]).map(b => {
+              return b.bytes
+              /*
+              console.log(
+                eventName,
+                TezosLanguageUtil.hexToMicheline(b.bytes).code.replace(
+                  /\\u/,
+                  ''
+                )
+              )
+              return JSON.parse(
+                TezosLanguageUtil.hexToMicheline(b.bytes).code.replace(
+                  /\\u/,
+                  ''
+                )
+              ) as MichelinePrimItem
+              */
+            })
             handler({
               name: eventName,
               values: values
