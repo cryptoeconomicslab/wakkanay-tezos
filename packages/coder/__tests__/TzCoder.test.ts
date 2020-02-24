@@ -24,7 +24,7 @@ describe('TzCoder', () => {
 
     test('encode BigNumber', () => {
       const addr = BigNumber.from(1)
-      expect(TzCoder.encode(addr).toHexString()).toBe('0x05010000000131')
+      expect(TzCoder.encode(addr).toHexString()).toBe('0x050001')
     })
 
     test('encode Struct', () => {
@@ -135,7 +135,7 @@ describe('TzCoder', () => {
     })
 
     test('decode BigNumber', () => {
-      const b = Bytes.fromHexString('0x05010000000131')
+      const b = Bytes.fromHexString('0x050001')
       expect(TzCoder.decode(BigNumber.default(), b)).toStrictEqual(
         BigNumber.from(1)
       )

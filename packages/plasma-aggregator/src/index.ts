@@ -46,7 +46,7 @@ const instantiate = async (): Promise<Aggregator> => {
     return new DepositContract(address, eventDb, wallet)
   }
   function commitmentContractFactory(address: Address) {
-    return new CommitmentContract(wallet.getConnection(address))
+    return new CommitmentContract(address, eventDb, wallet)
   }
 
   return new Aggregator(
