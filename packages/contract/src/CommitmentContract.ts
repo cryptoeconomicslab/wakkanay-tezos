@@ -101,12 +101,4 @@ export class CommitmentContract implements ICommitmentContract {
       console.log('event polled')
     })
   }
-
-  private getBlockNoFromHex(hex: string): number {
-    return Number(
-      (JSON.parse(
-        TezosLanguageUtil.hexToMicheline(hex).code
-      ) as MichelineNumber).int
-    )
-  }
 }

@@ -53,6 +53,7 @@
     "@cryptoeconomicslab/db": "^0.0.27",
     "@cryptoeconomicslab/level-kvs": "^0.0.6",
     "@cryptoeconomicslab/ovm": "^0.0.27",
+    "@cryptoeconomicslab/plasma": "^0.0.27",
     "@cryptoeconomicslab/tezos-coder": "^0.0.6",
     "@cryptoeconomicslab/tezos-wallet": "^0.0.6",
     "conseiljs": "^0.3.1",
