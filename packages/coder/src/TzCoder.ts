@@ -39,7 +39,7 @@ export function encodeInnerToMichelinePrimItem(
   if (c === 'Integer') {
     return { int: String(input) }
   } else if (c === 'BigNumber') {
-    return { string: input }
+    return { int: String(input) }
   } else if (c === 'Address') {
     return { bytes: input }
   } else if (c === 'Bytes') {
@@ -85,7 +85,7 @@ export function decodeInner(d: Codable, input: any): Codable {
   if (c === 'Integer') {
     d.setData(Number(input.int))
   } else if (c === 'BigNumber') {
-    d.setData(JSBI.BigInt(input.string))
+    d.setData(JSBI.BigInt(input.int))
   } else if (c === 'Address') {
     d.setData(input.bytes)
   } else if (c === 'Bytes') {
