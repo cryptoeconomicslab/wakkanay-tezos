@@ -9,9 +9,11 @@ import {
 } from '@cryptoeconomicslab/tezos-wallet'
 import {
   MichelineNumber,
-  removeBytesPrefix
+  removeBytesPrefix,
+  TzCoder
 } from '@cryptoeconomicslab/tezos-coder'
 import EventWatcher, { EventType } from './events'
+import JSBI from 'jsbi'
 
 export class CommitmentContract implements ICommitmentContract {
   private connection: ContractManager
@@ -42,8 +44,8 @@ export class CommitmentContract implements ICommitmentContract {
         {
           prim: 'Pair',
           args: [
-            { int: `'${blockNumber}'` },
-            { bytes: `'${removeBytesPrefix(root)}'` }
+            { int: blockNumber.data.toString() },
+            { bytes: removeBytesPrefix(root) }
           ]
         }
       ]
@@ -55,13 +57,17 @@ export class CommitmentContract implements ICommitmentContract {
     const events = await this.eventWatcher.getEventStorage(
       EventType.BLOCK_SUBMITED
     )
-    let latestBlockNo = 0
+    let latestBlockNo = BigNumber.default()
     events.map(e => {
-      // remove 05
-      const blockNo = this.getBlockNoFromHex(e.args[1][0].slice(2))
-      if (latestBlockNo < blockNo) latestBlockNo = blockNo
+      const blockNo = TzCoder.decode(
+        BigNumber.default(),
+        Bytes.fromHexString(e.args[1][0].bytes)
+      )
+      if (JSBI.lessThan(latestBlockNo.data, blockNo.data)) {
+        latestBlockNo = blockNo
+      }
     })
-    return BigNumber.fromString(latestBlockNo.toString())
+    return latestBlockNo
   }
 
   async getRoot(blockNumber: BigNumber): Promise<Bytes> {
@@ -69,11 +75,13 @@ export class CommitmentContract implements ICommitmentContract {
       EventType.BLOCK_SUBMITED
     )
     events.filter(e => {
-      // remove 05
-      const blockNo = this.getBlockNoFromHex(e.args[1][0].slice(2))
+      const blockNo = TzCoder.decode(
+        BigNumber.default(),
+        Bytes.fromHexString(e.args[1][0].bytes)
+      )
       return blockNo.toString() === blockNumber.toString()
     })
-    return Bytes.fromHexString(events[0].args[1][1])
+    return Bytes.fromHexString(events[0].args[1][1].bytes)
   }
 
   subscribeBlockSubmitted(
