@@ -4,7 +4,8 @@ import {
   BigNumber,
   Bytes,
   Integer,
-  Range
+  Range,
+  Struct
 } from '@cryptoeconomicslab/primitives'
 import { IDepositContract, EventLog } from '@cryptoeconomicslab/contract'
 import { KeyValueStore } from '@cryptoeconomicslab/db'
@@ -12,10 +13,12 @@ import { Property } from '@cryptoeconomicslab/ovm'
 import {
   MichelineBytes,
   MichelinePrim,
-  removeBytesPrefix
+  removeBytesPrefix,
+  TzCoder
 } from '@cryptoeconomicslab/tezos-coder'
 import { ContractManager, TzWallet } from '@cryptoeconomicslab/tezos-wallet'
 import EventWatcher, { EventType } from './events'
+import { Checkpoint } from '@cryptoeconomicslab/plasma'
 
 /**
  * TODO: add implementation
@@ -23,6 +26,7 @@ import EventWatcher, { EventType } from './events'
 export class DepositContract implements IDepositContract {
   private eventWatcher: EventWatcher
   private connection: ContractManager
+  private tokenAddress: string
 
   constructor(
     readonly address: Address,
@@ -35,9 +39,11 @@ export class DepositContract implements IDepositContract {
       kvs: eventDb,
       contractAddress: address.data
     })
+    this.tokenAddress = TezosMessageUtils.readAddress(address.data)
   }
 
   async deposit(amount: Integer, initialState: Property) {
+    const owner = TzCoder.decode(Address.default(), initialState.inputs[0])
     const param = {
       prim: 'Left',
       args: [
@@ -53,7 +59,7 @@ export class DepositContract implements IDepositContract {
                     {
                       prim: 'Pair',
                       args: [
-                        { int: `'${amount}'` },
+                        { int: amount.data.toString() },
                         {
                           prim: 'Pair',
                           args: [
@@ -63,19 +69,25 @@ export class DepositContract implements IDepositContract {
                                 args: [
                                   { int: '0' },
                                   {
-                                    bytes: `'${removeBytesPrefix(
-                                      initialState.inputs[0]
-                                    )}'`
+                                    string: TezosMessageUtils.readAddress(
+                                      owner.data
+                                    )
                                   }
                                 ]
                               }
                             ],
-                            { string: `'${initialState.deciderAddress.data}'` }
+                            {
+                              string: TezosMessageUtils.readAddress(
+                                initialState.deciderAddress.data.substr(2)
+                              )
+                            }
                           ]
                         }
                       ]
                     },
-                    { string: `'${'TOKEN_TYPE_ADDRESS'}'` }
+                    {
+                      string: this.tokenAddress
+                    }
                   ]
                 }
               ]
@@ -134,7 +146,7 @@ export class DepositContract implements IDepositContract {
                         { string: `'${checkpoint.deciderAddress}'` }
                       ]
                     },
-                    { string: `${'TOKEN_TYPE_ADDRESS'}` }
+                    { string: this.tokenAddress }
                   ]
                 }
               ]
@@ -195,7 +207,7 @@ export class DepositContract implements IDepositContract {
                         }
                       ]
                     },
-                    { string: `${'TOKEN_TYPE_ADDRESS'}` }
+                    { string: this.tokenAddress }
                   ]
                 }
               ]
@@ -270,24 +282,13 @@ export class DepositContract implements IDepositContract {
         }
       ]
       */
-      const checkpointId = log.values[1].bytes
-      const checkpoint = log.values[2].args
-      const stateUpdate = new Property(
-        Address.from(
-          TezosMessageUtils.readAddress(checkpoint[0].args[1].bytes)
-        ),
-        checkpoint[0].args[0].map((i: MichelinePrim) =>
-          Bytes.fromHexString(
-            // remove 05
-            (i.args[1] as MichelineBytes).bytes.slice(2)
-          )
-        )
+      const checkpointId = TzCoder.decode(Bytes.default(), log.values[1])
+      const checkpoint = Checkpoint.fromStruct(
+        TzCoder.decode(Checkpoint.getParamType(), log.values[2])
       )
-      const subrange = new Range(
-        BigNumber.fromString(checkpoint[1].args[1].int.toString()),
-        BigNumber.fromString(checkpoint[1].args[0].int.toString())
-      )
-      handler(Bytes.fromHexString(checkpointId), [subrange, stateUpdate])
+      const stateUpdate = checkpoint.stateUpdate
+      const subrange = checkpoint.subrange
+      handler(checkpointId, [subrange, stateUpdate])
     })
     this.eventWatcher.cancel()
     this.eventWatcher.start(() => {
