@@ -1,6 +1,6 @@
 {
   "name": "@cryptoeconomicslab/tezos-plasma-aggregator",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "tezos-aggregator",
   "author": {
     "name": "Cryptoeconomics Lab",
@@ -53,9 +53,9 @@
     "@cryptoeconomicslab/level-kvs": "^0.0.6",
     "@cryptoeconomicslab/plasma-aggregator": "0.0.34",
     "@cryptoeconomicslab/primitives": "0.0.34",
-    "@cryptoeconomicslab/tezos-coder": "^0.0.7",
-    "@cryptoeconomicslab/tezos-contract": "^0.0.7",
-    "@cryptoeconomicslab/tezos-wallet": "^0.0.7",
+    "@cryptoeconomicslab/tezos-coder": "^0.0.8",
+    "@cryptoeconomicslab/tezos-contract": "^0.0.8",
+    "@cryptoeconomicslab/tezos-wallet": "^0.0.8",
     "conseiljs": "^0.3.7",
     "tslib": "^1.10.0"
   },
