@@ -48,7 +48,8 @@ export class TezosBlockInfoProvider implements BlockInfoProvider {
     const contract = await TezosNodeReader.getAccountForBlock(
       this.tezosNodeEndpoint,
       level.toString(),
-      'KT1UxjVKVMsKRkwvG9XPqXBRNP8t3rqnmq3J'
+      TezosMessageUtils.readAddress(contractAddress.substr(2))
+      //      'KT1UxjVKVMsKRkwvG9XPqXBRNP8t3rqnmq3J'
     )
     if (!contract.script) {
       throw new Error('script must not be undefined')
