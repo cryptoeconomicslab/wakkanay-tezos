@@ -41,11 +41,8 @@ export class TzWallet implements Wallet {
       this.keyStore.privateKey,
       'edsk'
     )
-    const signatureBuffer = tweetnacl.sign.detached(
-      messageBuffer,
-      privateKeyBuffer
-    )
-    return Bytes.fromHexString(Buffer.from(signatureBuffer).toString('hex'))
+    const signature = tweetnacl.sign.detached(messageBuffer, privateKeyBuffer)
+    return Bytes.fromHexString(Buffer.from(signature).toString('hex'))
   }
 
   /**
