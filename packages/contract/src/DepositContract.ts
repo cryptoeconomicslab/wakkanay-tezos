@@ -10,12 +10,7 @@ import {
 import { IDepositContract, EventLog } from '@cryptoeconomicslab/contract'
 import { KeyValueStore } from '@cryptoeconomicslab/db'
 import { Property } from '@cryptoeconomicslab/ovm'
-import {
-  MichelineBytes,
-  MichelinePrim,
-  removeBytesPrefix,
-  TzCoder
-} from '@cryptoeconomicslab/tezos-coder'
+import { removeBytesPrefix, TzCoder } from '@cryptoeconomicslab/tezos-coder'
 import { ContractManager, TzWallet } from '@cryptoeconomicslab/tezos-wallet'
 import EventWatcher, { EventType } from './events'
 import { Checkpoint } from '@cryptoeconomicslab/plasma'
@@ -40,10 +35,7 @@ export class DepositContract implements IDepositContract {
       kvs: eventDb,
       contractAddress: address.data
     })
-    this.tokenAddress = TezosMessageUtils.readAddress(
-      address.data.substr(2)
-      //      address.data.startsWith('0x') ? address.data.substr(2) : address.data
-    )
+    this.tokenAddress = TezosMessageUtils.readAddress(address.data.substr(2))
   }
 
   async deposit(amount: Integer, initialState: Property) {
@@ -100,7 +92,6 @@ export class DepositContract implements IDepositContract {
         }
       ]
     }
-    console.log('invokeContract:', JSON.stringify(param))
     const result = await this.connection.invokeContract(
       0, //amount.data,
       'main',
