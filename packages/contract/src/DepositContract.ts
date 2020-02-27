@@ -35,7 +35,9 @@ export class DepositContract implements IDepositContract {
       kvs: eventDb,
       contractAddress: address.data
     })
-    this.tokenAddress = TezosMessageUtils.readAddress(address.data.substr(2))
+    this.tokenAddress = TezosMessageUtils.readAddress(
+      '000053c1edca8bd5c21c61d6f1fd091fa51d562aff1d'
+    )
   }
 
   async deposit(amount: Integer, initialState: Property) {
@@ -93,11 +95,11 @@ export class DepositContract implements IDepositContract {
       ]
     }
     const result = await this.connection.invokeContract(
-      0, //amount.data,
+      amount.data,
       'main',
       JSON.stringify(param)
     )
-    console.log('invokeContract result:', result)
+    console.log('invokeContract result:', JSON.stringify(result))
   }
 
   async finalizeCheckpoint(checkpoint: Property) {

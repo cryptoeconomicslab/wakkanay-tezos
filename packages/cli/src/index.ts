@@ -105,12 +105,12 @@ async function instantiate() {
   )
 }
 
+const depositContractAddress = process.env.DEPOSIT_CONTRACT_ADDRESS || ''
+const tokenAddress = process.env.TOKEN_ADDRESS || ''
+
 export default async function initialize() {
   const lightClient = await instantiate()
-  lightClient.registerToken(
-    '0x01df89eeeeebf54451fac43136cb115607773acf4700',
-    '0x01df89eeeeebf54451fac43136cb115607773acf4700'
-  )
+  lightClient.registerToken(tokenAddress, depositContractAddress)
   console.log('start')
   await lightClient.start()
   console.log('started')
@@ -118,12 +118,22 @@ export default async function initialize() {
   return lightClient
 }
 
+/*
+token address is 000053c1edca8bd5c21c61d6f1fd091fa51d562aff1d
+console.log(
+  TezosMessageUtils.writeAddress('tz1TGu6TN5GSez2ndXXeDX6LgUDvLzPLqgYV')
+)
+*/
+console.log(
+  TezosMessageUtils.writeAddress('KT1Jp22sP55NYCLFZyp9w8dYLGoTkoEJbxNv')
+)
+
 cli.command('deposit <amount>', 'Deposit').action((amount, options) => {
   initialize().then(async lightClient => {
     console.log('deposit', amount)
     await lightClient.deposit(
       Number(amount),
-      '0x01df89eeeeebf54451fac43136cb115607773acf4700'
+      tokenAddress
       // TezosMessageUtils.writeAddress('KT1UxjVKVMsKRkwvG9XPqXBRNP8t3rqnmq3J')
     )
     console.log('deposited')
