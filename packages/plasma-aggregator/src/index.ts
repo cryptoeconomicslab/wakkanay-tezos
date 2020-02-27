@@ -9,14 +9,14 @@ import {
 import { TzWallet } from '@cryptoeconomicslab/tezos-wallet'
 import * as TzCoder from '@cryptoeconomicslab/tezos-coder'
 import { setupContext } from '@cryptoeconomicslab/context'
+import fs from 'fs'
+import { config } from 'dotenv'
+config()
 
 import Aggregator, {
   BlockManager,
   StateManager
 } from '@cryptoeconomicslab/plasma-aggregator'
-import fs from 'fs'
-import { config } from 'dotenv'
-config()
 
 setupContext({
   coder: TzCoder

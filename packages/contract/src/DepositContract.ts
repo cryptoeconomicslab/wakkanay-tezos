@@ -39,7 +39,9 @@ export class DepositContract implements IDepositContract {
       kvs: eventDb,
       contractAddress: address.data
     })
-    this.tokenAddress = TezosMessageUtils.readAddress(address.data)
+    this.tokenAddress = TezosMessageUtils.readAddress(
+      address.data.startsWith('0x') ? address.data.substr(2) : address.data
+    )
   }
 
   async deposit(amount: Integer, initialState: Property) {
@@ -69,9 +71,9 @@ export class DepositContract implements IDepositContract {
                                 args: [
                                   { int: '0' },
                                   {
-                                    string: TezosMessageUtils.readAddress(
-                                      owner.data
-                                    )
+                                    bytes: TzCoder.encode(owner)
+                                      .toHexString()
+                                      .substr(2)
                                   }
                                 ]
                               }
@@ -96,12 +98,13 @@ export class DepositContract implements IDepositContract {
         }
       ]
     }
-    console.log('invokeContract', JSON.stringify(param))
-    await this.connection.invokeContract(
-      amount.data,
+    console.log('invokeContract:', JSON.stringify(param))
+    const result = await this.connection.invokeContract(
+      0, //amount.data,
       'main',
       JSON.stringify(param)
     )
+    console.log('invokeContract result:', result)
   }
 
   async finalizeCheckpoint(checkpoint: Property) {
@@ -283,13 +286,19 @@ export class DepositContract implements IDepositContract {
         }
       ]
       */
-      const checkpointId = TzCoder.decode(Bytes.default(), log.values[1])
-      const checkpoint = Checkpoint.fromStruct(
-        TzCoder.decode(Checkpoint.getParamType(), log.values[2])
-      )
-      const stateUpdate = checkpoint.stateUpdate
-      const subrange = checkpoint.subrange
-      handler(checkpointId, [subrange, stateUpdate])
+      let values = []
+      try {
+        values = log.values.map(v => Bytes.fromHexString(v))
+        const checkpointId = TzCoder.decode(Bytes.default(), values[1])
+        const checkpoint = Checkpoint.fromStruct(
+          TzCoder.decode(Checkpoint.getParamType(), values[2])
+        )
+        const stateUpdate = checkpoint.stateUpdate
+        const subrange = checkpoint.subrange
+        handler(checkpointId, [subrange, stateUpdate])
+      } catch (e) {
+        console.error('invalid log data', values)
+      }
     })
     this.eventWatcher.cancel()
     this.eventWatcher.start(() => {

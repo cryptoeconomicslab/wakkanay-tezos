@@ -29,9 +29,9 @@ async function instantiate() {
   // TODO: fix light client interface
   const network = process.env.TEZOS_NETWORK || 'babylonnet'
   const apiKey = process.env.TEZOS_APIKEY || 'hooman'
-  const url = process.env.MAIN_CHAIN_HOST
+  const url = process.env.CONCEIL_ENDPOINT
   if (!url) {
-    throw new Error('must require MAIN_CHAIN_HOST')
+    throw new Error('must require CONCEIL_ENDPOINT')
   }
   const wallet = new TzWallet(
     await TezosWalletUtil.restoreIdentityWithSecretKey(process.env

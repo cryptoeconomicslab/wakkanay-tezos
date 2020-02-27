@@ -122,6 +122,7 @@ export default class EventWatcher implements IEventWatcher {
           i,
           this.contractAddress
         )
+        console.log('storage:', JSON.stringify(storage))
         events = this.parseStorage(storage)
       } catch (e) {
         events = []
