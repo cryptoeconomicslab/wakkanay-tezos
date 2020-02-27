@@ -25,15 +25,20 @@ setupContext({
 const instantiate = async (): Promise<Aggregator> => {
   const kvs = new InMemoryKeyValueStore(Bytes.fromString('aaaaa'))
   await kvs.open()
-  const url = process.env.MAIN_CHAIN_HOST
+  const tezosNodeEndpoint = process.env.TEZOS_NODE_ENDPOINT
+  const url = process.env.CONCEIL_ENDPOINT
   const network = process.env.TEZOS_NETWORK || 'babylonnet'
   const apiKey = process.env.TEZOS_APIKEY || 'hooman'
+  if (!tezosNodeEndpoint) {
+    throw new Error('must require TEZOS_NODE_ENDPOINT')
+  }
   if (!url) {
-    throw new Error('must require MAIN_CHAIN_HOST')
+    throw new Error('must require CONCEIL_ENDPOINT')
   }
   const wallet = new TzWallet(
     await TezosWalletUtil.restoreIdentityWithSecretKey(process.env
       .AGGREGATOR_PRIVATE_KEY as string),
+    tezosNodeEndpoint,
     {
       url: url,
       apiKey: apiKey,

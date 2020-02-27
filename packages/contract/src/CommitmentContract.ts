@@ -27,9 +27,11 @@ export class CommitmentContract implements ICommitmentContract {
   ) {
     this.connection = new ContractManager(wallet, address)
     this.blockInfoProvider = new TezosBlockInfoProvider(
+      wallet.tezosNodeEndpoint,
       wallet.conseilServerInfo
     )
     this.eventWatcher = new EventWatcher({
+      tezosNodeEndpoint: wallet.tezosNodeEndpoint,
       conseilServerInfo: wallet.conseilServerInfo,
       kvs: eventDb,
       contractAddress: address.data,

@@ -35,6 +35,7 @@ export class DepositContract implements IDepositContract {
   ) {
     this.connection = new ContractManager(wallet, address)
     this.eventWatcher = new EventWatcher({
+      tezosNodeEndpoint: wallet.tezosNodeEndpoint,
       conseilServerInfo: wallet.conseilServerInfo,
       kvs: eventDb,
       contractAddress: address.data

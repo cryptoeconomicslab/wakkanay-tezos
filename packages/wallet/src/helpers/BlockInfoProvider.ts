@@ -16,6 +16,7 @@ interface Script {
 }
 
 export interface BlockInfoProvider {
+  readonly tezosNodeEndpoint
   readonly conseilServerInfo: ConseilServerInfo
   getContractStorage(
     level: number,
@@ -24,7 +25,10 @@ export interface BlockInfoProvider {
 }
 
 export class TezosBlockInfoProvider implements BlockInfoProvider {
-  constructor(readonly conseilServerInfo: ConseilServerInfo) {}
+  constructor(
+    readonly tezosNodeEndpoint,
+    readonly conseilServerInfo: ConseilServerInfo
+  ) {}
 
   async estimateFee(
     operationKindType: OperationKindType = OperationKindType.Transaction
@@ -42,8 +46,7 @@ export class TezosBlockInfoProvider implements BlockInfoProvider {
     contractAddress: string
   ): Promise<MichelinePrim> {
     const contract = await TezosNodeReader.getAccountForBlock(
-      'https://tezos-dev.cryptonomic-infra.tech',
-      //      this.conseilServerInfo.url,
+      this.tezosNodeEndpoint,
       level.toString(),
       'KT1UxjVKVMsKRkwvG9XPqXBRNP8t3rqnmq3J'
     )

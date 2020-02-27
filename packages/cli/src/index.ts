@@ -30,12 +30,17 @@ async function instantiate() {
   const network = process.env.TEZOS_NETWORK || 'babylonnet'
   const apiKey = process.env.TEZOS_APIKEY || 'hooman'
   const url = process.env.CONCEIL_ENDPOINT
+  const tezosNodeEndpoint = process.env.TEZOS_NODE_ENDPOINT
   if (!url) {
     throw new Error('must require CONCEIL_ENDPOINT')
+  }
+  if (!tezosNodeEndpoint) {
+    throw new Error('must require MAIN_CHAIN_HOST')
   }
   const wallet = new TzWallet(
     await TezosWalletUtil.restoreIdentityWithSecretKey(process.env
       .PRIVATE_KEY as string),
+    tezosNodeEndpoint,
     {
       url,
       apiKey,

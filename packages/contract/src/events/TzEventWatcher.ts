@@ -34,6 +34,7 @@ export enum EventType {
 }
 
 export type TzEventWatcherArgType = {
+  tezosNodeEndpoint: string
   conseilServerInfo: ConseilServerInfo
   kvs: KeyValueStore
   contractAddress: string
@@ -52,11 +53,15 @@ export default class EventWatcher implements IEventWatcher {
   public contractAddress: string
 
   constructor({
+    tezosNodeEndpoint,
     conseilServerInfo,
     kvs,
     contractAddress,
     options,
-    blockInfoProvider = new TezosBlockInfoProvider(conseilServerInfo)
+    blockInfoProvider = new TezosBlockInfoProvider(
+      tezosNodeEndpoint,
+      conseilServerInfo
+    )
   }: TzEventWatcherArgType) {
     this.blockInfoProvider = blockInfoProvider
     this.eventDb = new EventDb(kvs)
@@ -122,7 +127,6 @@ export default class EventWatcher implements IEventWatcher {
           i,
           this.contractAddress
         )
-        console.log('storage:', JSON.stringify(storage))
         events = this.parseStorage(storage)
       } catch (e) {
         events = []
@@ -139,24 +143,9 @@ export default class EventWatcher implements IEventWatcher {
         if (handler) {
           const args = e.args[1] as MichelinePrim[]
           args.forEach(arg => {
-            const values = ((arg as MichelinePrim).args[1] as any[]).map(b => {
-              return b.bytes
-              /*
-              console.log(
-                eventName,
-                TezosLanguageUtil.hexToMicheline(b.bytes).code.replace(
-                  /\\u/,
-                  ''
-                )
-              )
-              return JSON.parse(
-                TezosLanguageUtil.hexToMicheline(b.bytes).code.replace(
-                  /\\u/,
-                  ''
-                )
-              ) as MichelinePrimItem
-              */
-            })
+            const values = ((arg as MichelinePrim).args[1] as any[]).map(
+              b => b.bytes
+            )
             handler({
               name: eventName,
               values: values

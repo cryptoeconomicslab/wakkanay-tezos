@@ -10,7 +10,10 @@ export class TzWalletFactory implements WalletFactory {
     network: ''
   }
 
-  constructor(conseilServerInfo?: ConseilServerInfo) {
+  constructor(
+    readonly tezosNodeEndpoint: string,
+    conseilServerInfo?: ConseilServerInfo
+  ) {
     if (conseilServerInfo) {
       this.conseilServerInfo = conseilServerInfo
     }
@@ -19,6 +22,7 @@ export class TzWalletFactory implements WalletFactory {
   async fromPrivateKey(privateKey: string): Promise<Wallet> {
     return new TzWallet(
       await TezosWalletUtil.restoreIdentityWithSecretKey(privateKey),
+      this.tezosNodeEndpoint,
       this.conseilServerInfo
     )
   }

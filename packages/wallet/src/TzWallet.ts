@@ -13,6 +13,7 @@ import { ContractManager } from './helpers'
 export class TzWallet implements Wallet {
   constructor(
     readonly keyStore: KeyStore,
+    readonly tezosNodeEndpoint: string,
     readonly conseilServerInfo: ConseilServerInfo
   ) {}
 
