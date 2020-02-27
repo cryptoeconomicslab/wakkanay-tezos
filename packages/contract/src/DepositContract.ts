@@ -41,7 +41,8 @@ export class DepositContract implements IDepositContract {
       contractAddress: address.data
     })
     this.tokenAddress = TezosMessageUtils.readAddress(
-      address.data.startsWith('0x') ? address.data.substr(2) : address.data
+      address.data.substr(2)
+      //      address.data.startsWith('0x') ? address.data.substr(2) : address.data
     )
   }
 

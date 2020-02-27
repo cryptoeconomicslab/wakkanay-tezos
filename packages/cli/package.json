@@ -1,5 +1,5 @@
 {
-  "name": "@cryptoeconomicslab/tezos-cli",
+  "name": "@cryptoeconomicslab/tezos-liteclient-cli",
   "version": "0.0.6",
   "description": "CLI for tezos wallet",
   "author": {
@@ -40,9 +40,9 @@
     "@cryptoeconomicslab/tezos-coder": "^0.0.6",
     "@cryptoeconomicslab/tezos-contract": "^0.0.6",
     "@cryptoeconomicslab/tezos-wallet": "^0.0.6",
+    "cac": "^6.5.6",
     "conseiljs": "^0.3.7"
   },
-  "devDependencies": {},
   "peerDependencies": {
     "@cryptoeconomicslab/primitives": "^0.0.27"
   }

@@ -54,6 +54,7 @@ const instantiate = async (): Promise<Aggregator> => {
   const witnessDb = await kvs.bucket(Bytes.fromString('witness'))
   const eventDb = await kvs.bucket(Bytes.fromString('event'))
   function depositContractFactory(address: Address) {
+    console.log('depositContractFactory', address)
     return new DepositContract(address, eventDb, wallet)
   }
   function commitmentContractFactory(address: Address) {

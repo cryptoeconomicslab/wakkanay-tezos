@@ -11,9 +11,9 @@ import {
 import { TezosMessageUtils } from 'conseiljs'
 
 describe('TzCoder', () => {
-  const testAddress = TezosMessageUtils.writeAddress(
-    'tz1TGu6TN5GSez2ndXXeDX6LgUDvLzPLqgYV'
-  )
+  const testAddress =
+    '0x' +
+    TezosMessageUtils.writeAddress('tz1TGu6TN5GSez2ndXXeDX6LgUDvLzPLqgYV')
   describe('encode', () => {
     test('encode Address', () => {
       const addr = Address.from(testAddress)

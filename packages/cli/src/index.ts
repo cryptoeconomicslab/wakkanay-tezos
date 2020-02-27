@@ -16,6 +16,8 @@ import {
   ERC20Contract,
   OwnershipPayoutContract
 } from '@cryptoeconomicslab/tezos-contract'
+import Cli from 'cac'
+const cli = Cli()
 import { TzCoder } from '@cryptoeconomicslab/tezos-coder'
 import { setupContext } from '@cryptoeconomicslab/context'
 setupContext({
@@ -116,13 +118,16 @@ export default async function initialize() {
   return lightClient
 }
 
-initialize().then(async lightClient => {
-  console.log('deposit')
-  await lightClient.deposit(
-    1,
-    '0x01df89eeeeebf54451fac43136cb115607773acf4700'
-    //    TezosMessageUtils.writeAddress('KT1UxjVKVMsKRkwvG9XPqXBRNP8t3rqnmq3J')
-    // TezosMessageUtils.writeAddress('tz1XuAz2HmWNMXKSV9GTx9zvo6w9Ngr8LWkW')
-  )
-  console.log('deposited')
+cli.command('deposit <amount>', 'Deposit').action((amount, options) => {
+  initialize().then(async lightClient => {
+    console.log('deposit', amount)
+    await lightClient.deposit(
+      Number(amount),
+      '0x01df89eeeeebf54451fac43136cb115607773acf4700'
+      // TezosMessageUtils.writeAddress('KT1UxjVKVMsKRkwvG9XPqXBRNP8t3rqnmq3J')
+    )
+    console.log('deposited')
+  })
 })
+cli.help()
+cli.parse()
