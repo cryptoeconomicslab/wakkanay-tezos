@@ -1,17 +1,13 @@
-import { TezosLanguageUtil } from 'conseiljs'
-import { Address, Bytes, BigNumber } from '@cryptoeconomicslab/primitives'
-import { IAdjudicationContract, EventLog } from '@cryptoeconomicslab/contract'
+import { Address, Bytes, BigNumber, List } from '@cryptoeconomicslab/primitives'
+import { IAdjudicationContract } from '@cryptoeconomicslab/contract'
 import { KeyValueStore } from '@cryptoeconomicslab/db'
+import { ChallengeGame, Property } from '@cryptoeconomicslab/ovm'
 import {
   ContractManager,
   TzWallet,
   TezosBlockInfoProvider
 } from '@cryptoeconomicslab/tezos-wallet'
-import {
-  MichelineNumber,
-  removeBytesPrefix
-} from '@cryptoeconomicslab/tezos-coder'
-import EventWatcher, { EventType } from './events'
+import EventWatcher from './events'
 
 export class AdjudicationContract implements IAdjudicationContract {
   private connection: ContractManager
@@ -37,17 +33,13 @@ export class AdjudicationContract implements IAdjudicationContract {
     })
   }
 
-  getGame(
-    gameId: Bytes
-  ): Promise<import('@cryptoeconomicslab/ovm').ChallengeGame> {
+  getGame(gameId: Bytes): Promise<ChallengeGame> {
     throw new Error('Method not implemented.')
   }
   isDecided(gameId: Bytes): Promise<boolean> {
     throw new Error('Method not implemented.')
   }
-  claimProperty(
-    property: import('@cryptoeconomicslab/ovm').Property
-  ): Promise<void> {
+  claimProperty(property: Property): Promise<void> {
     throw new Error('Method not implemented.')
   }
   decideClaimToTrue(gameId: Bytes): Promise<void> {
@@ -64,7 +56,7 @@ export class AdjudicationContract implements IAdjudicationContract {
   }
   challenge(
     gameId: Bytes,
-    challengeInputs: import('@cryptoeconomicslab/primitives').List<Bytes>,
+    challengeInputs: List<Bytes>,
     challengingGameId: Bytes
   ): Promise<void> {
     throw new Error('Method not implemented.')
@@ -77,7 +69,7 @@ export class AdjudicationContract implements IAdjudicationContract {
   subscribeNewPropertyClaimed(
     handler: (
       gameId: Bytes,
-      property: import('@cryptoeconomicslab/ovm').Property,
+      property: Property,
       createdBlock: BigNumber
     ) => void
   ): void {

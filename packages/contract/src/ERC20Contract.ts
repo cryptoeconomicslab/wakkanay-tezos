@@ -1,17 +1,12 @@
-import { TezosLanguageUtil } from 'conseiljs'
-import { Address, Bytes, BigNumber } from '@cryptoeconomicslab/primitives'
-import { IERC20Contract, EventLog } from '@cryptoeconomicslab/contract'
+import { Address, Integer } from '@cryptoeconomicslab/primitives'
+import { IERC20Contract } from '@cryptoeconomicslab/contract'
 import { KeyValueStore } from '@cryptoeconomicslab/db'
 import {
   ContractManager,
   TzWallet,
   TezosBlockInfoProvider
 } from '@cryptoeconomicslab/tezos-wallet'
-import {
-  MichelineNumber,
-  removeBytesPrefix
-} from '@cryptoeconomicslab/tezos-coder'
-import EventWatcher, { EventType } from './events'
+import EventWatcher from './events'
 
 export class ERC20Contract implements IERC20Contract {
   private connection: ContractManager
@@ -37,10 +32,7 @@ export class ERC20Contract implements IERC20Contract {
     })
   }
 
-  async approve(
-    spender: Address,
-    amount: import('@cryptoeconomicslab/primitives').Integer
-  ): Promise<void> {
+  async approve(spender: Address, amount: Integer): Promise<void> {
     return
   }
 }

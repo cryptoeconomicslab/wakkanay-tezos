@@ -1,20 +1,13 @@
-import { TezosLanguageUtil } from 'conseiljs'
-import { Address, Bytes, BigNumber } from '@cryptoeconomicslab/primitives'
-import {
-  IOwnershipPayoutContract,
-  EventLog
-} from '@cryptoeconomicslab/contract'
+import { Address, BigNumber } from '@cryptoeconomicslab/primitives'
+import { IOwnershipPayoutContract } from '@cryptoeconomicslab/contract'
 import { KeyValueStore } from '@cryptoeconomicslab/db'
 import {
   ContractManager,
   TzWallet,
   TezosBlockInfoProvider
 } from '@cryptoeconomicslab/tezos-wallet'
-import {
-  MichelineNumber,
-  removeBytesPrefix
-} from '@cryptoeconomicslab/tezos-coder'
-import EventWatcher, { EventType } from './events'
+import EventWatcher from './events'
+import { Property } from '@cryptoeconomicslab/ovm'
 
 export class OwnershipPayoutContract implements IOwnershipPayoutContract {
   private connection: ContractManager
@@ -42,7 +35,7 @@ export class OwnershipPayoutContract implements IOwnershipPayoutContract {
 
   finalizeExit(
     depositContractAddress: Address,
-    exitProperty: import('@cryptoeconomicslab/ovm').Property,
+    exitProperty: Property,
     depositedRangeId: BigNumber,
     owner: Address
   ): Promise<void> {
