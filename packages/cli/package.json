@@ -1,7 +1,7 @@
 {
-  "name": "@cryptoeconomicslab/tezos-plasma-aggregator",
+  "name": "@cryptoeconomicslab/tezos-liteclient-cli",
   "version": "0.0.8",
-  "description": "tezos-aggregator",
+  "description": "CLI for tezos wallet",
   "author": {
     "name": "Cryptoeconomics Lab",
     "url": "https://www.cryptoeconomicslab.com/"
@@ -12,60 +12,38 @@
   "license": "Apache-2.0",
   "main": "lib/index.js",
   "directories": {
-    "lib": "lib"
+    "lib": "lib",
+    "test": "__tests__"
   },
   "files": [
     "lib"
   ],
   "publishConfig": {
-    "access": "restricted"
+    "access": "public"
   },
   "scripts": {
-    "start": "node lib/index",
     "build": "tsc --build",
     "build:check": "tsc --noEmit",
+    "start": "node lib/index",
     "test": "jest --passWithNoTests",
     "lint": "eslint --ext ts,tsx src",
     "lint:fix": "eslint --ext ts,tsx src --fix",
     "doc": "typedoc --out docs src",
     "clean": "rm -rf lib docs"
   },
-  "jest": {
-    "transform": {
-      "^.+\\.tsx?$": "ts-jest"
-    },
-    "testMatch": [
-      "**/__tests__/**/?(*.)+(spec|test).(ts|js)",
-      "**/?(*.)+(spec|test).ts"
-    ],
-    "moduleFileExtensions": [
-      "js",
-      "ts"
-    ],
-    "globals": {
-      "ts-jest": {
-        "tsConfig": "tsconfig.json"
-      }
-    }
-  },
   "dependencies": {
-    "@cryptoeconomicslab/coder": "0.0.34",
+    "@cryptoeconomicslab/context": "^0.0.27",
     "@cryptoeconomicslab/level-kvs": "^0.0.6",
-    "@cryptoeconomicslab/plasma-aggregator": "0.0.34",
-    "@cryptoeconomicslab/primitives": "0.0.34",
+    "@cryptoeconomicslab/ovm": "^0.0.27",
+    "@cryptoeconomicslab/plasma-light-client": "^0.0.27",
+    "@cryptoeconomicslab/primitives": "^0.0.27",
     "@cryptoeconomicslab/tezos-coder": "^0.0.8",
     "@cryptoeconomicslab/tezos-contract": "^0.0.8",
     "@cryptoeconomicslab/tezos-wallet": "^0.0.8",
-    "conseiljs": "^0.3.7",
-    "dotenv": "^8.2.0",
-    "tslib": "^1.10.0"
+    "cac": "^6.5.6",
+    "conseiljs": "^0.3.7"
   },
   "peerDependencies": {
     "@cryptoeconomicslab/primitives": "^0.0.27"
-  },
-  "devDependencies": {
-    "ts-node": "^8.6.2",
-    "typescript": "^3.7.5"
-  },
-  "gitHead": "84db76a7e563b6be70794ff270af86e670eb3e70"
+  }
 }

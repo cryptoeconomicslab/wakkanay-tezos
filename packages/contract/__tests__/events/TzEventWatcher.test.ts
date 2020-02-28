@@ -32,18 +32,23 @@ describe('TzEventWatcher', () => {
   describe('poll', () => {
     it('succeed to poll events', async () => {
       const eventWatcher = new EventWatcher({
+        tezosNodeEndpoint: conseilServerInfo.url,
         conseilServerInfo: conseilServerInfo,
         kvs,
         contractAddress: 'KT1HSBDy3MgRPh2G4oqBQMUsyxy5EYPGKzpv',
         options: { interval: 1000 },
-        blockInfoProvider: new MockBlockInfoProvider(conseilServerInfo, false)
+        blockInfoProvider: new MockBlockInfoProvider(
+          conseilServerInfo.url,
+          conseilServerInfo,
+          false
+        )
       })
       const handler = jest.fn()
       eventWatcher.subscribe('BlockSubmitted', handler)
       await eventWatcher.poll(196527, 196530, () => {})
       expect(handler).toHaveBeenCalledWith({
         name: 'BlockSubmitted',
-        values: [{ int: '0' }, { bytes: '010203040506' }]
+        values: ['001', '0a00000006010203040506']
       })
       expect(handler).toHaveBeenCalledTimes(1)
       await eventWatcher.poll(196527, 196530, () => {})
@@ -53,11 +58,16 @@ describe('TzEventWatcher', () => {
 
     it('fail to poll events', async () => {
       const eventWatcher = new EventWatcher({
+        tezosNodeEndpoint: conseilServerInfo.url,
         conseilServerInfo: conseilServerInfo,
         kvs,
         contractAddress: 'KT1HSBDy3MgRPh2G4oqBQMUsyxy5EYPGKzpv',
         options: { interval: 1000 },
-        blockInfoProvider: new MockBlockInfoProvider(conseilServerInfo, true)
+        blockInfoProvider: new MockBlockInfoProvider(
+          conseilServerInfo.url,
+          conseilServerInfo,
+          true
+        )
       })
       const handler = jest.fn()
       eventWatcher.subscribe('BlockSubmitted', handler)
@@ -69,11 +79,16 @@ describe('TzEventWatcher', () => {
   describe('getEventStorage', () => {
     it('succeed to getEventStorage', async () => {
       const eventWatcher = new EventWatcher({
+        tezosNodeEndpoint: conseilServerInfo.url,
         conseilServerInfo: conseilServerInfo,
         kvs,
         contractAddress: 'KT1HSBDy3MgRPh2G4oqBQMUsyxy5EYPGKzpv',
         options: { interval: 1000 },
-        blockInfoProvider: new MockBlockInfoProvider(conseilServerInfo, false)
+        blockInfoProvider: new MockBlockInfoProvider(
+          conseilServerInfo.url,
+          conseilServerInfo,
+          false
+        )
       })
       const storage = await eventWatcher.getEventStorage(
         EventType.BLOCK_SUBMITED

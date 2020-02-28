@@ -41,7 +41,7 @@ export function encodeInnerToMichelinePrimItem(
   } else if (c === 'BigNumber') {
     return { int: String(input) }
   } else if (c === 'Address') {
-    return { bytes: input }
+    return { bytes: input.substr(2) }
   } else if (c === 'Bytes') {
     return {
       bytes: Bytes.from(input)
@@ -87,7 +87,7 @@ export function decodeInner(d: Codable, input: any): Codable {
   } else if (c === 'BigNumber') {
     d.setData(JSBI.BigInt(input.int))
   } else if (c === 'Address') {
-    d.setData(input.bytes)
+    d.setData('0x' + input.bytes)
   } else if (c === 'Bytes') {
     d.setData(Bytes.fromHexString(input.bytes).data)
   } else if (c === 'List') {

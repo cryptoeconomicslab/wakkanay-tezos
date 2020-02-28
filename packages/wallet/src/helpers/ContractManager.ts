@@ -4,13 +4,14 @@ import {
   OperationResult,
   TezosConseilClient,
   TezosNodeWriter,
-  TezosParameterFormat
+  TezosParameterFormat,
+  TezosMessageUtils
 } from 'conseiljs'
 import { TzWallet } from '../'
 
 // TODO: research default limits per operation
-export const DefaultTransactionStorageLimit = 300
-export const DefaultTransactionGasLimit = 10600
+export const DefaultTransactionStorageLimit = 600
+export const DefaultTransactionGasLimit = 380000
 
 export class ContractManager {
   constructor(readonly tzWallet: TzWallet, readonly contractAddress: Address) {}
@@ -45,16 +46,22 @@ export class ContractManager {
     const derivationPath = ''
 
     const fee: number = await this.estimateFee()
+    console.log(
+      'to:',
+      TezosMessageUtils.readAddress(this.contractAddress.data.substr(2))
+    )
+    console.log('params:', params)
+    console.log('parameterFormat:', parameterFormat)
     const result = await TezosNodeWriter.sendContractInvocationOperation(
-      this.tzWallet.conseilServerInfo.url,
+      this.tzWallet.tezosNodeEndpoint,
       this.tzWallet.keyStore,
-      this.contractAddress.raw,
+      TezosMessageUtils.readAddress(this.contractAddress.data.substr(2)),
       amount,
       fee,
       derivationPath,
       storageLimit,
       gasLimit,
-      entrypoint,
+      undefined,
       params,
       parameterFormat
     )

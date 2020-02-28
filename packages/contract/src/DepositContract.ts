@@ -1,21 +1,9 @@
 import { TezosMessageUtils } from 'conseiljs'
-import {
-  Address,
-  BigNumber,
-  Bytes,
-  Integer,
-  Range,
-  Struct
-} from '@cryptoeconomicslab/primitives'
+import { Address, Bytes, Integer, Range } from '@cryptoeconomicslab/primitives'
 import { IDepositContract, EventLog } from '@cryptoeconomicslab/contract'
 import { KeyValueStore } from '@cryptoeconomicslab/db'
 import { Property } from '@cryptoeconomicslab/ovm'
-import {
-  MichelineBytes,
-  MichelinePrim,
-  removeBytesPrefix,
-  TzCoder
-} from '@cryptoeconomicslab/tezos-coder'
+import { removeBytesPrefix, TzCoder } from '@cryptoeconomicslab/tezos-coder'
 import { ContractManager, TzWallet } from '@cryptoeconomicslab/tezos-wallet'
 import EventWatcher, { EventType } from './events'
 import { Checkpoint } from '@cryptoeconomicslab/plasma'
@@ -35,11 +23,12 @@ export class DepositContract implements IDepositContract {
   ) {
     this.connection = new ContractManager(wallet, address)
     this.eventWatcher = new EventWatcher({
+      tezosNodeEndpoint: wallet.tezosNodeEndpoint,
       conseilServerInfo: wallet.conseilServerInfo,
       kvs: eventDb,
       contractAddress: address.data
     })
-    this.tokenAddress = TezosMessageUtils.readAddress(address.data)
+    this.tokenAddress = 'tz1TGu6TN5GSez2ndXXeDX6LgUDvLzPLqgYV'
   }
 
   async deposit(amount: Integer, initialState: Property) {
@@ -69,9 +58,9 @@ export class DepositContract implements IDepositContract {
                                 args: [
                                   { int: '0' },
                                   {
-                                    string: TezosMessageUtils.readAddress(
-                                      owner.data
-                                    )
+                                    bytes: TzCoder.encode(owner)
+                                      .toHexString()
+                                      .substr(2)
                                   }
                                 ]
                               }
@@ -96,11 +85,12 @@ export class DepositContract implements IDepositContract {
         }
       ]
     }
-    await this.connection.invokeContract(
+    const result = await this.connection.invokeContract(
       amount.data,
       'main',
       JSON.stringify(param)
     )
+    console.log('invokeContract result:', JSON.stringify(result))
   }
 
   async finalizeCheckpoint(checkpoint: Property) {
@@ -282,13 +272,19 @@ export class DepositContract implements IDepositContract {
         }
       ]
       */
-      const checkpointId = TzCoder.decode(Bytes.default(), log.values[1])
-      const checkpoint = Checkpoint.fromStruct(
-        TzCoder.decode(Checkpoint.getParamType(), log.values[2])
-      )
-      const stateUpdate = checkpoint.stateUpdate
-      const subrange = checkpoint.subrange
-      handler(checkpointId, [subrange, stateUpdate])
+      let values = []
+      try {
+        values = log.values.map(v => Bytes.fromHexString(v))
+        const checkpointId = TzCoder.decode(Bytes.default(), values[1])
+        const checkpoint = Checkpoint.fromStruct(
+          TzCoder.decode(Checkpoint.getParamType(), values[2])
+        )
+        const stateUpdate = checkpoint.stateUpdate
+        const subrange = checkpoint.subrange
+        handler(checkpointId, [subrange, stateUpdate])
+      } catch (e) {
+        console.error('invalid log data', values)
+      }
     })
     this.eventWatcher.cancel()
     this.eventWatcher.start(() => {

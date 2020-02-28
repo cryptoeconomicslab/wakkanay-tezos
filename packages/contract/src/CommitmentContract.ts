@@ -27,9 +27,11 @@ export class CommitmentContract implements ICommitmentContract {
   ) {
     this.connection = new ContractManager(wallet, address)
     this.blockInfoProvider = new TezosBlockInfoProvider(
+      wallet.tezosNodeEndpoint,
       wallet.conseilServerInfo
     )
     this.eventWatcher = new EventWatcher({
+      tezosNodeEndpoint: wallet.tezosNodeEndpoint,
       conseilServerInfo: wallet.conseilServerInfo,
       kvs: eventDb,
       contractAddress: address.data,
@@ -81,6 +83,9 @@ export class CommitmentContract implements ICommitmentContract {
       )
       return blockNo.toString() === blockNumber.toString()
     })
+    if (events.length == 0) {
+      return Bytes.default()
+    }
     return Bytes.fromHexString(events[0].args[1][1].bytes)
   }
 

@@ -5,6 +5,7 @@ import { testEventStorage } from './testInitialStorage'
 
 export class MockBlockInfoProvider implements BlockInfoProvider {
   constructor(
+    readonly tezosNodeEndpoint: string,
     readonly conseilServerInfo: ConseilServerInfo,
     readonly failingMode: boolean
   ) {}

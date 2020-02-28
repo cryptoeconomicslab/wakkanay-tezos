@@ -13,11 +13,14 @@ import { ContractManager } from './helpers'
 export class TzWallet implements Wallet {
   constructor(
     readonly keyStore: KeyStore,
+    readonly tezosNodeEndpoint: string,
     readonly conseilServerInfo: ConseilServerInfo
   ) {}
 
   public getAddress(): Address {
-    return Address.from(this.keyStore.publicKeyHash)
+    return Address.from(
+      '0x' + TezosMessageUtils.writeAddress(this.keyStore.publicKeyHash)
+    )
   }
 
   public async getL1Balance(): Promise<Balance> {

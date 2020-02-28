@@ -1,10 +1,7 @@
-import { Address } from '@cryptoeconomicslab/primitives'
 import {
   OperationKindType,
   TezosConseilClient,
   ConseilServerInfo,
-  ConseilQueryBuilder,
-  ConseilOperator,
   TezosMessageUtils,
   TezosNodeReader
 } from 'conseiljs'
@@ -16,6 +13,7 @@ interface Script {
 }
 
 export interface BlockInfoProvider {
+  readonly tezosNodeEndpoint
   readonly conseilServerInfo: ConseilServerInfo
   getContractStorage(
     level: number,
@@ -24,7 +22,10 @@ export interface BlockInfoProvider {
 }
 
 export class TezosBlockInfoProvider implements BlockInfoProvider {
-  constructor(readonly conseilServerInfo: ConseilServerInfo) {}
+  constructor(
+    readonly tezosNodeEndpoint,
+    readonly conseilServerInfo: ConseilServerInfo
+  ) {}
 
   async estimateFee(
     operationKindType: OperationKindType = OperationKindType.Transaction
@@ -42,9 +43,9 @@ export class TezosBlockInfoProvider implements BlockInfoProvider {
     contractAddress: string
   ): Promise<MichelinePrim> {
     const contract = await TezosNodeReader.getAccountForBlock(
-      this.conseilServerInfo.url,
+      this.tezosNodeEndpoint,
       level.toString(),
-      contractAddress
+      TezosMessageUtils.readAddress(contractAddress.substr(2))
     )
     if (!contract.script) {
       throw new Error('script must not be undefined')
@@ -56,3 +57,4 @@ export class TezosBlockInfoProvider implements BlockInfoProvider {
     // throw Error('Not implemented')
   }
 }
+// curl https://tezos-dev.cryptonomic-infra.tech/chains/main/blocks/314580/context/contracts/KT1UxjVKVMsKRkwvG9XPqXBRNP8t3rqnmq3J/storage
