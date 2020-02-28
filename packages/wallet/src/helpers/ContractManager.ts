@@ -10,8 +10,8 @@ import {
 import { TzWallet } from '../'
 
 // TODO: research default limits per operation
-export const DefaultTransactionStorageLimit = 1200
-export const DefaultTransactionGasLimit = 501200
+export const DefaultTransactionStorageLimit = 600
+export const DefaultTransactionGasLimit = 380000
 
 export class ContractManager {
   constructor(readonly tzWallet: TzWallet, readonly contractAddress: Address) {}
@@ -61,7 +61,7 @@ export class ContractManager {
       derivationPath,
       storageLimit,
       gasLimit,
-      entrypoint,
+      undefined,
       params,
       parameterFormat
     )

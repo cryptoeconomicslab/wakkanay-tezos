@@ -1,12 +1,5 @@
 import { TezosMessageUtils } from 'conseiljs'
-import {
-  Address,
-  BigNumber,
-  Bytes,
-  Integer,
-  Range,
-  Struct
-} from '@cryptoeconomicslab/primitives'
+import { Address, Bytes, Integer, Range } from '@cryptoeconomicslab/primitives'
 import { IDepositContract, EventLog } from '@cryptoeconomicslab/contract'
 import { KeyValueStore } from '@cryptoeconomicslab/db'
 import { Property } from '@cryptoeconomicslab/ovm'
@@ -35,9 +28,7 @@ export class DepositContract implements IDepositContract {
       kvs: eventDb,
       contractAddress: address.data
     })
-    this.tokenAddress = TezosMessageUtils.readAddress(
-      '000053c1edca8bd5c21c61d6f1fd091fa51d562aff1d'
-    )
+    this.tokenAddress = 'tz1TGu6TN5GSez2ndXXeDX6LgUDvLzPLqgYV'
   }
 
   async deposit(amount: Integer, initialState: Property) {

@@ -83,6 +83,9 @@ export class CommitmentContract implements ICommitmentContract {
       )
       return blockNo.toString() === blockNumber.toString()
     })
+    if (events.length == 0) {
+      return Bytes.default()
+    }
     return Bytes.fromHexString(events[0].args[1][1].bytes)
   }
 
