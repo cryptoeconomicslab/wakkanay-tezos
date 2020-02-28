@@ -1,10 +1,7 @@
-import { Address } from '@cryptoeconomicslab/primitives'
 import {
   OperationKindType,
   TezosConseilClient,
   ConseilServerInfo,
-  ConseilQueryBuilder,
-  ConseilOperator,
   TezosMessageUtils,
   TezosNodeReader
 } from 'conseiljs'
@@ -49,7 +46,6 @@ export class TezosBlockInfoProvider implements BlockInfoProvider {
       this.tezosNodeEndpoint,
       level.toString(),
       TezosMessageUtils.readAddress(contractAddress.substr(2))
-      //      'KT1UxjVKVMsKRkwvG9XPqXBRNP8t3rqnmq3J'
     )
     if (!contract.script) {
       throw new Error('script must not be undefined')
