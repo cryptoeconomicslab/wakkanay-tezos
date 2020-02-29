@@ -42,7 +42,7 @@ export type TzEventWatcherArgType = {
   blockInfoProvider?: BlockInfoProvider
 }
 
-const DEFAULT_INTERVAL = 2000
+const DEFAULT_INTERVAL = 5000
 
 export default class EventWatcher implements IEventWatcher {
   public blockInfoProvider: BlockInfoProvider
