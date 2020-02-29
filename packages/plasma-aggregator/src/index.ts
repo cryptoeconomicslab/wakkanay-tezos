@@ -1,4 +1,4 @@
-import { TezosMessageUtils, TezosWalletUtil } from 'conseiljs'
+import { TezosWalletUtil } from 'conseiljs'
 import { Address, Bytes } from '@cryptoeconomicslab/primitives'
 import { RangeDb } from '@cryptoeconomicslab/db'
 import { InMemoryKeyValueStore } from '@cryptoeconomicslab/level-kvs'
@@ -7,8 +7,11 @@ import {
   CommitmentContract
 } from '@cryptoeconomicslab/tezos-contract'
 import { TzWallet } from '@cryptoeconomicslab/tezos-wallet'
-import * as TzCoder from '@cryptoeconomicslab/tezos-coder'
+import { TzCoder } from '@cryptoeconomicslab/tezos-coder'
 import { setupContext } from '@cryptoeconomicslab/context'
+setupContext({
+  coder: TzCoder
+})
 import fs from 'fs'
 import { config } from 'dotenv'
 config()
@@ -17,10 +20,6 @@ import Aggregator, {
   BlockManager,
   StateManager
 } from '@cryptoeconomicslab/plasma-aggregator'
-
-setupContext({
-  coder: TzCoder
-})
 
 const instantiate = async (): Promise<Aggregator> => {
   const kvs = new InMemoryKeyValueStore(Bytes.fromString('aaaaa'))
