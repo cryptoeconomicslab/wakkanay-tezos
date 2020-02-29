@@ -1,6 +1,6 @@
 {
   "name": "@cryptoeconomicslab/tezos-contract",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "tezos-contract",
   "author": {
     "name": "Cryptoeconomics Lab",
@@ -54,8 +54,8 @@
     "@cryptoeconomicslab/level-kvs": "^0.0.6",
     "@cryptoeconomicslab/ovm": "0.0.34",
     "@cryptoeconomicslab/plasma": "0.0.34",
-    "@cryptoeconomicslab/tezos-coder": "^0.0.8",
-    "@cryptoeconomicslab/tezos-wallet": "^0.0.8",
+    "@cryptoeconomicslab/tezos-coder": "^0.0.9",
+    "@cryptoeconomicslab/tezos-wallet": "^0.0.9",
     "conseiljs": "^0.3.1",
     "lodash.flattendeep": "^4.4.0"
   },
