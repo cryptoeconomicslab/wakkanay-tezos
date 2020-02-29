@@ -9,6 +9,7 @@ import {
   Struct
 } from '@cryptoeconomicslab/primitives'
 import { TezosMessageUtils } from 'conseiljs'
+import { Property } from '@cryptoeconomicslab/ovm'
 
 describe('TzCoder', () => {
   const testAddress =
@@ -184,7 +185,9 @@ describe('TzCoder', () => {
     })
 
     test('decode List of Integer', () => {
-      const b = Bytes.fromHexString('0x050200000006000100020003')
+      const b = Bytes.fromHexString(
+        '0x050200000012070400000001070400010002070400020003'
+      )
       const t = List.default(Integer, Integer.default())
       expect(TzCoder.decode(t, b)).toStrictEqual(
         List.from(Integer, [Integer.from(1), Integer.from(2), Integer.from(3)])
@@ -196,7 +199,7 @@ describe('TzCoder', () => {
         default: () => Tuple.from([Bytes.default(), Integer.default()])
       }
       const b = Bytes.fromHexString(
-        '0x05020000001c07070a000000057465737431000107070a0000000574657374320002'
+        '0x0502000000240704000007070a00000005746573743100010704000107070a0000000574657374320002'
       )
       const t = List.default(
         factory,
@@ -209,7 +212,7 @@ describe('TzCoder', () => {
         ])
       )
     })
-
+    /*
     test('decode List of Struct', () => {
       const factory = {
         default: () =>
@@ -219,7 +222,7 @@ describe('TzCoder', () => {
           ])
       }
       const b = Bytes.fromHexString(
-        '0x05020000001c07070a0000000568656c6c6f000107070a0000000568656c6c6f0002'
+        '0x0502000000220704000007070100000004686f676500010704000107070100000004686f67650001'
       )
       const t = List.default(
         factory,
@@ -241,7 +244,7 @@ describe('TzCoder', () => {
         ])
       )
     })
-
+    */
     test('decode List of List of Integer', () => {
       const childFactory = {
         default: () => Integer.default()
@@ -250,7 +253,7 @@ describe('TzCoder', () => {
         default: () => List.from(childFactory, [])
       }
       const b = Bytes.fromHexString(
-        '0x050200000012020000000400010004020000000400060009'
+        '0x05020000005107040000020000001207040000000107040001000307040002000407040001020000001207040000000207040001000407040002000607040002020000001207040000000a07040001000b07040002000c'
       )
       const t = List.default(
         factory,
@@ -258,9 +261,43 @@ describe('TzCoder', () => {
       )
       expect(TzCoder.decode(t, b)).toStrictEqual(
         List.from(factory, [
-          List.from(childFactory, [Integer.from(1), Integer.from(4)]),
-          List.from(childFactory, [Integer.from(6), Integer.from(9)])
+          List.from(childFactory, [
+            Integer.from(1),
+            Integer.from(3),
+            Integer.from(4)
+          ]),
+          List.from(childFactory, [
+            Integer.from(2),
+            Integer.from(4),
+            Integer.from(6)
+          ]),
+          List.from(childFactory, [
+            Integer.from(10),
+            Integer.from(11),
+            Integer.from(12)
+          ])
         ])
+      )
+    })
+
+    test('succeed to decode StateObject', async () => {
+      const property = Property.fromStruct(
+        TzCoder.decode(
+          Property.getParamType(),
+          Bytes.fromHexString(
+            '0x0507070a0000001601df89eeeeebf54451fac43136cb115607773acf47000200000025070400000a0000001c050a0000001600007a9f5213b12cfe85e32bf906601efd945079fcd2'
+          )
+        )
+      )
+      expect(property).toStrictEqual(
+        new Property(
+          Address.from('0x01df89eeeeebf54451fac43136cb115607773acf4700'),
+          [
+            Bytes.fromHexString(
+              '0x050a0000001600007a9f5213b12cfe85e32bf906601efd945079fcd2'
+            )
+          ]
+        )
       )
     })
   })
