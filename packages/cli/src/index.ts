@@ -7,6 +7,7 @@ import LightClient, {
   CheckpointManager
 } from '@cryptoeconomicslab/plasma-light-client'
 import { TzWallet } from '@cryptoeconomicslab/tezos-wallet'
+import { Balance } from '@cryptoeconomicslab/wallet'
 import { Address, Bytes } from '@cryptoeconomicslab/primitives'
 import leveldown from 'leveldown'
 import { LevelKeyValueStore } from '@cryptoeconomicslab/level-kvs'
@@ -145,12 +146,13 @@ cli.command('deposit <amount>', 'Deposit').action(async (amount, options) => {
 cli.command('balance', 'getBalance').action(async options => {
   const lightClient = await initialize()
   const balances = await lightClient.getBalance()
-  console.log('Balance:', JSON.stringify(balances))
+  const l1balance: Balance = await lightClient['wallet'].getL1Balance()
+  console.log('Balance L1:', Number(l1balance.value.raw) / 1000000, 'tz')
+  console.log('Balance L2:', balances[0].amount / 1000000, 'tz')
 })
 cli
   .command('unlock <mnemonic> <email> <password> <address>', 'Import')
   .action(async (mnemonic, email, password, address, options) => {
-    console.log(mnemonic, email, password, address)
     const a = await TezosWalletUtil.unlockFundraiserIdentity(
       mnemonic,
       email,
@@ -158,7 +160,6 @@ cli
       address
     )
     console.log(a.privateKey, a.publicKeyHash)
-    console.log('tz1QULkMrWga7Ti38pziN91haYfLDqFkh5oo')
   })
 cli.help()
 cli.parse()

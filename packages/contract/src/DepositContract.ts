@@ -96,7 +96,10 @@ export class DepositContract implements IDepositContract {
       'main',
       JSON.stringify(param)
     )
-    console.log('invokeContract result:', JSON.stringify(result))
+    console.log(
+      `succeed to deposit. open https://babylonnet.tzstats.com/${result.operationGroupID}`
+    )
+    // console.log('invokeContract result:', JSON.stringify(result))
   }
 
   async finalizeCheckpoint(checkpoint: Property) {
@@ -227,7 +230,6 @@ export class DepositContract implements IDepositContract {
       Address.from('0x' + micheline.args[0].args[1].bytes),
       micheline.args[0].args[0].map(i => Bytes.fromHexString(i.args[1].bytes))
     )
-    console.log(stateUpdate)
     return new Checkpoint(subrange, stateUpdate)
   }
 
@@ -249,7 +251,7 @@ export class DepositContract implements IDepositContract {
     })
     this.eventWatcher.cancel()
     this.eventWatcher.start(() => {
-      console.log('CheckpointFinalized event polled')
+      // console.log('CheckpointFinalized event polled')
     })
   }
 

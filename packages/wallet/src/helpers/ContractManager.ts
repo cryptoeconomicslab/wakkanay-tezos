@@ -46,12 +46,14 @@ export class ContractManager {
     const derivationPath = ''
 
     const fee: number = (await this.estimateFee()) + 40000
+    /*
     console.log(
       'to:',
       TezosMessageUtils.readAddress(this.contractAddress.data.substr(2))
     )
     console.log('fee:', fee)
     console.log('params:', params)
+    */
     const result = await TezosNodeWriter.sendContractInvocationOperation(
       this.tzWallet.tezosNodeEndpoint,
       this.tzWallet.keyStore,

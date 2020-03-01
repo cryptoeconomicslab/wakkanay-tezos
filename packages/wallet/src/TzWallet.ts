@@ -25,12 +25,12 @@ export class TzWallet implements Wallet {
 
   public async getL1Balance(): Promise<Balance> {
     // can't get an account if it has not participated in a transaction yet
-    const account = await TezosConseilClient.getAccount(
+    const account = (await TezosConseilClient.getAccount(
       this.conseilServerInfo,
       this.conseilServerInfo.network,
-      this.getAddress().raw
-    )
-    const balance = account[0] ? account[0].balance : 0
+      TezosMessageUtils.readAddress(this.getAddress().data.substr(2))
+    )) as any
+    const balance = account ? account.balance : 0
     return new Balance(new BigNumber(balance), 6, 'tz')
   }
 

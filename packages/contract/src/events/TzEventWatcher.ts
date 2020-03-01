@@ -119,7 +119,7 @@ export default class EventWatcher implements IEventWatcher {
     blockNumber: number,
     completedHandler: CompletedHandler
   ) {
-    console.log('from to:', fromBlockNumber, blockNumber)
+    // console.log('from to:', fromBlockNumber, blockNumber)
     for (let i = fromBlockNumber; i <= blockNumber; i++) {
       let events: MichelinePrim[]
       try {
@@ -135,7 +135,7 @@ export default class EventWatcher implements IEventWatcher {
         const seen = await this.eventDb.getSeen(this.getHash(e))
         return !seen
       })
-      console.log('filtered:', JSON.stringify(filtered))
+      // console.log('filtered:', JSON.stringify(filtered))
       filtered.map(async (e: MichelinePrim | symbol) => {
         e = e as MichelinePrim
         const eventName = (e.args[0] as MichelineString).string
