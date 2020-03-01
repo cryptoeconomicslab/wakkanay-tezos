@@ -10,6 +10,7 @@ import {
 } from '@cryptoeconomicslab/primitives'
 import { TezosMessageUtils } from 'conseiljs'
 import { Property } from '@cryptoeconomicslab/ovm'
+import { StateUpdateRecord } from '@cryptoeconomicslab/plasma'
 
 describe('TzCoder', () => {
   const testAddress =
@@ -53,6 +54,15 @@ describe('TzCoder', () => {
       )
     })
 
+    test('encode List of an Integer', () => {
+      const factory = {
+        default: () => Integer.default()
+      }
+      const list = List.from(factory, [Integer.from(1)])
+      expect(TzCoder.encode(list).toHexString()).toBe(
+        '0x050200000006070400000001'
+      )
+    })
     test('encode List of Integer', () => {
       const factory = {
         default: () => Integer.default()
@@ -184,6 +194,14 @@ describe('TzCoder', () => {
       )
     })
 
+    test('decode List of an Integer', () => {
+      const b = Bytes.fromHexString('0x050200000006070400000001')
+      const t = List.default(Integer, Integer.default())
+      expect(TzCoder.decode(t, b)).toStrictEqual(
+        List.from(Integer, [Integer.from(1)])
+      )
+    })
+
     test('decode List of Integer', () => {
       const b = Bytes.fromHexString(
         '0x050200000012070400000001070400010002070400020003'
@@ -297,6 +315,35 @@ describe('TzCoder', () => {
           ]
         )
       )
+    })
+
+    test('succeed to decode StateUpdate', async () => {
+      const so = new Property(
+        Address.from('0x01df89eeeeebf54451fac43136cb115607773acf4700'),
+        [
+          Bytes.fromHexString(
+            '0x050a0000001600007a9f5213b12cfe85e32bf906601efd945079fcd2'
+          )
+        ]
+      )
+      const su = new StateUpdateRecord(
+        Address.from(testAddress),
+        Address.from(testAddress),
+        BigNumber.from(10),
+        so
+      )
+      expect(TzCoder.encode(su.toStruct()).toHexString()).toEqual(
+        '0x050707070707070a00000016000053c1edca8bd5c21c61d6f1fd091fa51d562aff1d0a00000016000053c1edca8bd5c21c61d6f1fd091fa51d562aff1d000a07070a0000001601df89eeeeebf54451fac43136cb115607773acf47000200000025070400000a0000001c050a0000001600007a9f5213b12cfe85e32bf906601efd945079fcd2'
+      )
+      const record = StateUpdateRecord.fromStruct(
+        TzCoder.decode(
+          StateUpdateRecord.getParamType(),
+          Bytes.fromHexString(
+            '0x050707070707070a00000016000053c1edca8bd5c21c61d6f1fd091fa51d562aff1d0a00000016000053c1edca8bd5c21c61d6f1fd091fa51d562aff1d000a07070a0000001601df89eeeeebf54451fac43136cb115607773acf47000200000025070400000a0000001c050a0000001600007a9f5213b12cfe85e32bf906601efd945079fcd2'
+          )
+        )
+      )
+      expect(record).toStrictEqual(su)
     })
   })
 })

@@ -181,6 +181,9 @@ export default class EventWatcher implements IEventWatcher {
         return (e.args[0] as MichelineString).string === eventType.toString()
       }
     )
+    if (eventStorage.length == 0) {
+      throw new Error('no events')
+    }
     return eventStorage[0].args[1] as MichelinePrim[]
   }
 

@@ -227,6 +227,7 @@ export class DepositContract implements IDepositContract {
       Address.from('0x' + micheline.args[0].args[1].bytes),
       micheline.args[0].args[0].map(i => Bytes.fromHexString(i.args[1].bytes))
     )
+    console.log(stateUpdate)
     return new Checkpoint(subrange, stateUpdate)
   }
 
@@ -248,7 +249,7 @@ export class DepositContract implements IDepositContract {
     })
     this.eventWatcher.cancel()
     this.eventWatcher.start(() => {
-      console.log('event polled')
+      console.log('CheckpointFinalized event polled')
     })
   }
 

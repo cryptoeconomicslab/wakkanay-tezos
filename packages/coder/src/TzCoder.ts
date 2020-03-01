@@ -8,7 +8,11 @@ import {
 } from '@cryptoeconomicslab/primitives'
 import flattenDeep from 'lodash.flattendeep'
 import { AbiEncodeError, AbiDecodeError } from './Error'
-import { MichelinePrimItem, isMichelinePrim } from './MichelineTypes'
+import {
+  MichelinePrim,
+  MichelinePrimItem,
+  isMichelinePrim
+} from './MichelineTypes'
 import JSBI from 'jsbi'
 import { TezosLanguageUtil, TezosMessageUtils } from 'conseiljs'
 
@@ -78,13 +82,56 @@ export function encodeInnerToMichelinePrimItem(
 function decodeArgs(arg: MichelinePrimItem): MichelinePrimItem[] {
   if (isMichelinePrim(arg)) {
     return flattenDeep(
-      arg.args.map((item: MichelinePrimItem) => decodeArgs(item))
+      arg.args.map((item: MichelinePrimItem) => {
+        const a = item as any
+        if (a.prim == 'Pair') {
+          return decodeArgs(item)
+        } else {
+          return item
+        }
+      })
     )
   } else if (arg instanceof Array) {
     return arg.map((item: MichelinePrimItem) => item)
   } else {
     return [arg]
   }
+}
+const a = {
+  prim: 'Pair',
+  args: [
+    {
+      prim: 'Pair',
+      args: [
+        {
+          prim: 'Pair',
+          args: [
+            { bytes: '000053c1edca8bd5c21c61d6f1fd091fa51d562aff1d' },
+            { bytes: '000053c1edca8bd5c21c61d6f1fd091fa51d562aff1d' }
+          ]
+        },
+        { int: '10' }
+      ]
+    },
+    {
+      prim: 'Pair',
+      args: [
+        { bytes: '01df89eeeeebf54451fac43136cb115607773acf4700' },
+        [
+          {
+            prim: 'Elt',
+            args: [
+              { int: '0' },
+              {
+                bytes:
+                  '050a0000001600007a9f5213b12cfe85e32bf906601efd945079fcd2'
+              }
+            ]
+          }
+        ]
+      ]
+    }
+  ]
 }
 export function decodeInner(d: Codable, input: any): Codable {
   const c = d.constructor.name
@@ -97,6 +144,14 @@ export function decodeInner(d: Codable, input: any): Codable {
   } else if (c === 'Bytes') {
     d.setData(Bytes.fromHexString(input.bytes).data)
   } else if (c === 'List') {
+    d.setData(
+      input.map((item: any) => {
+        const di = (d as List<Codable>).getC().default()
+        decodeInner(di, item.args[1])
+        return di
+      })
+    )
+    /*
     if (input instanceof Array) {
       d.setData(
         input.map((item: any) => {
@@ -110,11 +165,15 @@ export function decodeInner(d: Codable, input: any): Codable {
       decodeInner(di, input.args[1])
       d.setData([di])
     }
+    */
   } else if (c === 'Tuple') {
     const list: MichelinePrimItem[] = decodeArgs(input)
     d.setData((d as Tuple).data.map((di, i) => decodeInner(di, list[i])))
   } else if (c === 'Struct') {
-    const list: MichelinePrimItem[] = decodeArgs(input)
+    let list: MichelinePrimItem[] = input
+    if (isMichelinePrim(list)) {
+      list = decodeArgs(list.args[0]).concat([list.args[1]])
+    }
     d.setData(
       (d as Struct).data.map(({ key, value }, i) => {
         return { key: key, value: decodeInner(value, list[i]) }

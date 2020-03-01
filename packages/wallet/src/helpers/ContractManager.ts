@@ -28,7 +28,7 @@ export class ContractManager {
       operationKindType
     )
 
-    return result[0].medium
+    return result[0].high
   }
 
   /**
@@ -45,7 +45,7 @@ export class ContractManager {
     // BIP44 Derivation Path if signed with hardware, empty if signed with software
     const derivationPath = ''
 
-    const fee: number = await this.estimateFee()
+    const fee: number = (await this.estimateFee()) + 40000
     console.log(
       'to:',
       TezosMessageUtils.readAddress(this.contractAddress.data.substr(2))
