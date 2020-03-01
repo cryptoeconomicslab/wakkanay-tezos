@@ -63,7 +63,7 @@ describe('TzCoder', () => {
         Integer.from(3)
       ])
       expect(TzCoder.encode(list).toHexString()).toBe(
-        '0x050200000006000100020003'
+        '0x050200000012070400000001070400010002070400020003'
       )
     })
 

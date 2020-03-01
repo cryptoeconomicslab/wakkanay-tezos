@@ -49,12 +49,18 @@ export function encodeInnerToMichelinePrimItem(
         .substr(2)
     }
   } else if (c === 'List') {
-    return input.map((item: any) =>
-      encodeInnerToMichelinePrimItem(
-        (d as List<Codable>).getC().default(),
-        item
-      )
-    )
+    return input.map((item: any, index) => {
+      return {
+        prim: 'Elt',
+        args: [
+          { int: index.toString() },
+          encodeInnerToMichelinePrimItem(
+            (d as List<Codable>).getC().default(),
+            item
+          )
+        ]
+      }
+    })
   } else if (c === 'Tuple') {
     return encodeToPair((d as Tuple).data, input)
   } else if (c === 'Struct') {
