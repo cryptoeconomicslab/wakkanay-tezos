@@ -116,9 +116,7 @@ const tokenAddress = process.env.TOKEN_ADDRESS || ''
 export default async function initialize() {
   const lightClient = await instantiate()
   lightClient.registerToken(tokenAddress, depositContractAddress)
-  console.log('start')
-  //  await lightClient.start()
-  console.log('started')
+  await lightClient.start()
 
   return lightClient
 }
