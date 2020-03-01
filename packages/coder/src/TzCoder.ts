@@ -81,58 +81,14 @@ export function encodeInnerToMichelinePrimItem(
  */
 function decodeArgs(arg: MichelinePrimItem): MichelinePrimItem[] {
   if (isMichelinePrim(arg)) {
-    return flattenDeep(
-      arg.args.map((item: MichelinePrimItem) => {
-        const a = item as any
-        if (a.prim == 'Pair') {
-          return decodeArgs(item)
-        } else {
-          return item
-        }
-      })
-    )
+    return decodeArgs(arg.args[0]).concat([arg.args[1]])
   } else if (arg instanceof Array) {
     return arg.map((item: MichelinePrimItem) => item)
   } else {
     return [arg]
   }
 }
-const a = {
-  prim: 'Pair',
-  args: [
-    {
-      prim: 'Pair',
-      args: [
-        {
-          prim: 'Pair',
-          args: [
-            { bytes: '000053c1edca8bd5c21c61d6f1fd091fa51d562aff1d' },
-            { bytes: '000053c1edca8bd5c21c61d6f1fd091fa51d562aff1d' }
-          ]
-        },
-        { int: '10' }
-      ]
-    },
-    {
-      prim: 'Pair',
-      args: [
-        { bytes: '01df89eeeeebf54451fac43136cb115607773acf4700' },
-        [
-          {
-            prim: 'Elt',
-            args: [
-              { int: '0' },
-              {
-                bytes:
-                  '050a0000001600007a9f5213b12cfe85e32bf906601efd945079fcd2'
-              }
-            ]
-          }
-        ]
-      ]
-    }
-  ]
-}
+
 export function decodeInner(d: Codable, input: any): Codable {
   const c = d.constructor.name
   if (c === 'Integer') {
