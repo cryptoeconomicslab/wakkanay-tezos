@@ -76,7 +76,7 @@ describe('TzCoder', () => {
         Tuple.from([Bytes.fromString('test2'), Integer.from(2)])
       ])
       expect(TzCoder.encode(list).toHexString()).toBe(
-        '0x05020000001c07070a000000057465737431000107070a0000000574657374320002'
+        '0x0502000000240704000007070a00000005746573743100010704000107070a0000000574657374320002'
       )
     })
 
@@ -99,7 +99,7 @@ describe('TzCoder', () => {
         ])
       ])
       expect(TzCoder.encode(list).toHexString()).toBe(
-        '0x05020000001c07070a0000000568656c6c6f000107070a0000000568656c6c6f0002'
+        '0x0502000000240704000007070a0000000568656c6c6f00010704000107070a0000000568656c6c6f0002'
       )
     })
 
@@ -115,7 +115,7 @@ describe('TzCoder', () => {
         List.from(childFactory, [Integer.from(6), Integer.from(9)])
       ])
       expect(TzCoder.encode(list).toHexString()).toBe(
-        '0x050200000012020000000400010004020000000400060009'
+        '0x05020000002a07040000020000000c07040000000107040001000407040001020000000c070400000006070400010009'
       )
     })
 
@@ -212,7 +212,6 @@ describe('TzCoder', () => {
         ])
       )
     })
-    /*
     test('decode List of Struct', () => {
       const factory = {
         default: () =>
@@ -222,7 +221,7 @@ describe('TzCoder', () => {
           ])
       }
       const b = Bytes.fromHexString(
-        '0x0502000000220704000007070100000004686f676500010704000107070100000004686f67650001'
+        '0x0502000000240704000007070a0000000568656c6c6f00010704000107070a0000000568656c6c6f0002'
       )
       const t = List.default(
         factory,
@@ -244,7 +243,6 @@ describe('TzCoder', () => {
         ])
       )
     })
-    */
     test('decode List of List of Integer', () => {
       const childFactory = {
         default: () => Integer.default()
