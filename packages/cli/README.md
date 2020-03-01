@@ -8,3 +8,9 @@
 cp .sample.env .env
 node lib/index.js deposit 1
 ```
+
+### Balance
+
+```
+node lib/index.js balance
+```
