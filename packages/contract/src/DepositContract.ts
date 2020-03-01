@@ -1,5 +1,11 @@
-import { TezosMessageUtils } from 'conseiljs'
-import { Address, Bytes, Integer, Range } from '@cryptoeconomicslab/primitives'
+import { TezosLanguageUtil, TezosMessageUtils } from 'conseiljs'
+import {
+  Address,
+  Bytes,
+  Integer,
+  Range,
+  BigNumber
+} from '@cryptoeconomicslab/primitives'
 import { IDepositContract, EventLog } from '@cryptoeconomicslab/contract'
 import { KeyValueStore } from '@cryptoeconomicslab/db'
 import { Property } from '@cryptoeconomicslab/ovm'
@@ -209,76 +215,30 @@ export class DepositContract implements IDepositContract {
     await this.connection.invokeContract(0, 'main', JSON.stringify(param))
   }
 
+  public static decodeCheckpoint(bytes: Bytes) {
+    const hexString = bytes.toHexString().substr(2)
+    const body = hexString.substr(2)
+    const micheline = JSON.parse(TezosLanguageUtil.hexToMicheline(body).code)
+    const subrange = new Range(
+      BigNumber.fromString(micheline.args[1].args[1].int),
+      BigNumber.fromString(micheline.args[1].args[0].int)
+    )
+    const stateUpdate = new Property(
+      Address.from('0x' + micheline.args[0].args[1].bytes),
+      micheline.args[0].args[0].map(i => Bytes.fromHexString(i.args[1].bytes))
+    )
+    return new Checkpoint(subrange, stateUpdate)
+  }
+
   subscribeCheckpointFinalized(
     handler: (checkpointId: Bytes, checkpoint: [Range, Property]) => void
   ) {
     this.eventWatcher.subscribe('CheckpointFinalized', (log: EventLog) => {
-      /**
-       * TODO: delete
-       * NOTE: this is the image data
-      const d = [
-        // token type
-        { bytes: '000053c1edca8bd5c21c61d6f1fd091fa51d562aff1d' },
-        // checkpoint id
-        {
-          bytes:
-            '28f3a910172a1fd70d8d172600485c764c82761702e650e45448ca53c2135092'
-        },
-        // checkpoint
-        {
-          prim: 'Pair',
-          args: [
-            {
-              prim: 'Pair',
-              args: [
-                [
-                  {
-                    prim: 'Elt',
-                    args: [
-                      { int: '0' },
-                      {
-                        // token type address
-                        bytes:
-                          '050a00000016000053c1edca8bd5c21c61d6f1fd091fa51d562aff1d'
-                      }
-                    ]
-                  },
-                  {
-                    prim: 'Elt',
-                    // range
-                    args: [{ int: '1' }, { bytes: '05070700020003' }]
-                  },
-                  // current block
-                  { prim: 'Elt', args: [{ int: '2' }, { bytes: '050000' }] },
-                  {
-                    // property
-                    prim: 'Elt',
-                    args: [
-                      { int: '3' },
-                      {
-                        bytes:
-                          '0507070a00000016000053c1edca8bd5c21c61d6f1fd091fa51d562aff1d0200000025070400000a0000001c050a00000016000053c1edca8bd5c21c61d6f1fd091fa51d562aff1d'
-                      }
-                    ]
-                  }
-                ],
-                // predicateAddress
-                { bytes: '000053c1edca8bd5c21c61d6f1fd091fa51d562aff1d' }
-              ]
-            },
-            // subrange
-            { prim: 'Pair', args: [{ int: '3' }, { int: '2' }] }
-          ]
-        }
-      ]
-      */
       let values = []
       try {
         values = log.values.map(v => Bytes.fromHexString(v))
         const checkpointId = TzCoder.decode(Bytes.default(), values[1])
-        const checkpoint = Checkpoint.fromStruct(
-          TzCoder.decode(Checkpoint.getParamType(), values[2])
-        )
+        const checkpoint = DepositContract.decodeCheckpoint(values[2])
         const stateUpdate = checkpoint.stateUpdate
         const subrange = checkpoint.subrange
         handler(checkpointId, [subrange, stateUpdate])

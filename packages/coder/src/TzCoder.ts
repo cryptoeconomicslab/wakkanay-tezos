@@ -49,12 +49,18 @@ export function encodeInnerToMichelinePrimItem(
         .substr(2)
     }
   } else if (c === 'List') {
-    return input.map((item: any) =>
-      encodeInnerToMichelinePrimItem(
-        (d as List<Codable>).getC().default(),
-        item
-      )
-    )
+    return input.map((item: any, index) => {
+      return {
+        prim: 'Elt',
+        args: [
+          { int: index.toString() },
+          encodeInnerToMichelinePrimItem(
+            (d as List<Codable>).getC().default(),
+            item
+          )
+        ]
+      }
+    })
   } else if (c === 'Tuple') {
     return encodeToPair((d as Tuple).data, input)
   } else if (c === 'Struct') {
@@ -91,13 +97,19 @@ export function decodeInner(d: Codable, input: any): Codable {
   } else if (c === 'Bytes') {
     d.setData(Bytes.fromHexString(input.bytes).data)
   } else if (c === 'List') {
-    d.setData(
-      input.map((item: any) => {
-        const di = (d as List<Codable>).getC().default()
-        decodeInner(di, item)
-        return di
-      })
-    )
+    if (input instanceof Array) {
+      d.setData(
+        input.map((item: any) => {
+          const di = (d as List<Codable>).getC().default()
+          decodeInner(di, item.args[1])
+          return di
+        })
+      )
+    } else {
+      const di = (d as List<Codable>).getC().default()
+      decodeInner(di, input.args[1])
+      d.setData([di])
+    }
   } else if (c === 'Tuple') {
     const list: MichelinePrimItem[] = decodeArgs(input)
     d.setData((d as Tuple).data.map((di, i) => decodeInner(di, list[i])))

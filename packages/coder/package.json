@@ -50,6 +50,7 @@
   },
   "devDependencies": {
     "@cryptoeconomicslab/coder": "0.0.34",
+    "@cryptoeconomicslab/ovm": "0.0.34",
     "@cryptoeconomicslab/primitives": "0.0.34",
     "@types/lodash.flattendeep": "^4.4.6"
   },
