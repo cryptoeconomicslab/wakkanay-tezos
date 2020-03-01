@@ -56,8 +56,10 @@
     "@cryptoeconomicslab/tezos-coder": "^0.0.9",
     "@cryptoeconomicslab/tezos-contract": "^0.0.9",
     "@cryptoeconomicslab/tezos-wallet": "^0.0.9",
+    "@types/leveldown": "^4.0.2",
     "conseiljs": "^0.3.7",
     "dotenv": "^8.2.0",
+    "leveldown": "^5.5.1",
     "tslib": "^1.10.0"
   },
   "peerDependencies": {

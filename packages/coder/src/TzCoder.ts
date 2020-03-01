@@ -149,6 +149,7 @@ export const TzCoder: Coder = {
     const hexString = data.toHexString().substr(2)
     // remove "05"
     const body = hexString.substr(2)
+    console.log(TezosLanguageUtil.hexToMicheline(body).code)
     return decodeInner(
       d,
       JSON.parse(TezosLanguageUtil.hexToMicheline(body).code)

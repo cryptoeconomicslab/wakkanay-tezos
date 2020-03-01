@@ -149,6 +149,16 @@ cli.command('balance', 'getBalance').action(async options => {
   console.log('Balance L2:', balances[0].amount / 1000000, 'tz')
 })
 cli
+  .command('transfer <amount> <to>', 'transfer')
+  .action(async (amount, to, options) => {
+    const lightClient = await initialize()
+    await lightClient.transfer(
+      amount,
+      tokenAddress,
+      '0x' + TezosMessageUtils.writeAddress(to)
+    )
+  })
+cli
   .command('unlock <mnemonic> <email> <password> <address>', 'Import')
   .action(async (mnemonic, email, password, address, options) => {
     const a = await TezosWalletUtil.unlockFundraiserIdentity(

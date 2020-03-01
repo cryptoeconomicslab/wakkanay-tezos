@@ -6,11 +6,15 @@ import {
   BigNumber,
   List,
   Tuple,
-  Struct
+  Struct,
+  Range
 } from '@cryptoeconomicslab/primitives'
 import { TezosMessageUtils } from 'conseiljs'
 import { Property } from '@cryptoeconomicslab/ovm'
-import { StateUpdateRecord } from '@cryptoeconomicslab/plasma'
+import {
+  StateUpdateRecord,
+  TransactionReceipt
+} from '@cryptoeconomicslab/plasma'
 
 describe('TzCoder', () => {
   const testAddress =
@@ -344,6 +348,32 @@ describe('TzCoder', () => {
         )
       )
       expect(record).toStrictEqual(su)
+    })
+
+    test('succeed to decode TxReciept', async () => {
+      const receipt = new TransactionReceipt(
+        Integer.from(1),
+        BigNumber.from(10),
+        [BigNumber.from(2)],
+        new Range(BigNumber.from(0), BigNumber.from(10)),
+        Address.from('0x01df89eeeeebf54451fac43136cb115607773acf4700'),
+        Address.from('0x01df89eeeeebf54451fac43136cb115607773acf4700'),
+        Bytes.fromHexString(
+          '0x050a0000001600007a9f5213b12cfe85e32bf906601efd945079fcd2'
+        )
+      )
+      expect(TzCoder.encode(receipt.toStruct()).toHexString()).toEqual(
+        '0x050707070707070707070707070001000a020000000607040000000207070000000a0a0000001601df89eeeeebf54451fac43136cb115607773acf47000a0000001601df89eeeeebf54451fac43136cb115607773acf47000a0000001c050a0000001600007a9f5213b12cfe85e32bf906601efd945079fcd2'
+      )
+      const record = TransactionReceipt.fromStruct(
+        TzCoder.decode(
+          TransactionReceipt.getParamType(),
+          Bytes.fromHexString(
+            '0x050707070707070707070707070001000a020000000607040000000207070000000a0a0000001601df89eeeeebf54451fac43136cb115607773acf47000a0000001601df89eeeeebf54451fac43136cb115607773acf47000a0000001c050a0000001600007a9f5213b12cfe85e32bf906601efd945079fcd2'
+          )
+        )
+      )
+      expect(record).toStrictEqual(receipt)
     })
   })
 })

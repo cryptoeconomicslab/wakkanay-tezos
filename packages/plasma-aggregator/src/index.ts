@@ -1,7 +1,8 @@
 import { TezosWalletUtil } from 'conseiljs'
 import { Address, Bytes } from '@cryptoeconomicslab/primitives'
 import { RangeDb } from '@cryptoeconomicslab/db'
-import { InMemoryKeyValueStore } from '@cryptoeconomicslab/level-kvs'
+import leveldown from 'leveldown'
+import { LevelKeyValueStore } from '@cryptoeconomicslab/level-kvs'
 import {
   DepositContract,
   CommitmentContract
@@ -22,7 +23,10 @@ import Aggregator, {
 } from '@cryptoeconomicslab/plasma-aggregator'
 
 const instantiate = async (): Promise<Aggregator> => {
-  const kvs = new InMemoryKeyValueStore(Bytes.fromString('aaaaa'))
+  const kvs = new LevelKeyValueStore(
+    Bytes.fromString('aaaaa'),
+    leveldown('.db')
+  )
   await kvs.open()
   const tezosNodeEndpoint = process.env.TEZOS_NODE_ENDPOINT
   const url = process.env.CONCEIL_ENDPOINT
