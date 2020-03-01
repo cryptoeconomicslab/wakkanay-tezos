@@ -10,6 +10,14 @@ Wakkanay-Tezos is experimental ovm implementation in TypeScript for Tezos.
 npm test
 ```
 
-## Run
+## Packages
 
-[@cryptoeconomicslab/tezos-plasma-aggregator](https://github.com/cryptoeconomicslab/wakkanay-tezos/tree/master/packages/plasma-aggregator)
+### [@cryptoeconomicslab/tezos-liteclient-cli](/packages/cli)
+
+CLI of Plasma Lite Client
+
+[![npm](https://img.shields.io/npm/v/@cryptoeconomicslab/tezos-liteclient-cli)](https://www.npmjs.com/package/@cryptoeconomicslab/tezos-liteclient-cli)
+
+### [@cryptoeconomicslab/tezos-plasma-aggregator](/packages/plasma-aggregator)
+
+Plasma Aggregator
