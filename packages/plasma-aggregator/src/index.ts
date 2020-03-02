@@ -24,7 +24,7 @@ import Aggregator, {
 
 const instantiate = async (): Promise<Aggregator> => {
   const kvs = new LevelKeyValueStore(
-    Bytes.fromString('aaaaa'),
+    Bytes.fromString('plasma_aggregator'),
     leveldown('.db')
   )
   await kvs.open()

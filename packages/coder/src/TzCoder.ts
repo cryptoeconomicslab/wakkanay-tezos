@@ -6,7 +6,6 @@ import {
   Tuple,
   Struct
 } from '@cryptoeconomicslab/primitives'
-import flattenDeep from 'lodash.flattendeep'
 import { AbiEncodeError, AbiDecodeError } from './Error'
 import {
   MichelinePrim,

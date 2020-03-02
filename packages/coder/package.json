@@ -60,8 +60,7 @@
   },
   "dependencies": {
     "conseiljs": "^0.3.1",
-    "jsbi": "^3.1.1",
-    "lodash.flattendeep": "^4.4.0"
+    "jsbi": "^3.1.1"
   },
   "gitHead": "09fb78d66ccfcd48656b8081e2296b7156594d97"
 }

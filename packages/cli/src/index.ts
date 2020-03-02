@@ -28,7 +28,7 @@ setupContext({
 
 async function instantiate() {
   const kvs = new LevelKeyValueStore(
-    Bytes.fromString('plasma_aggregator'),
+    Bytes.fromString('tezos-liteclient-cli'),
     leveldown('.db')
   )
   const eventDb = await kvs.bucket(Bytes.fromString('event'))
