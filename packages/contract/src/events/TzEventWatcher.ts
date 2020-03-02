@@ -25,6 +25,7 @@ import {
 
 export interface EventWatcherOptions {
   interval?: number
+  initialBlock?: number
 }
 
 export enum EventType {
@@ -94,7 +95,9 @@ export default class EventWatcher implements IEventWatcher {
         Bytes.fromString('topic')
       )
       if (latestBlock == 0) {
-        latestBlock = block.level - 1
+        // initial block
+        latestBlock = this.options.initialBlock || 331380
+        // block.level - 1
       }
       await this.poll(latestBlock + 1, block.level, handler)
     } catch (e) {
@@ -119,7 +122,7 @@ export default class EventWatcher implements IEventWatcher {
     blockNumber: number,
     completedHandler: CompletedHandler
   ) {
-    // console.log('from to:', fromBlockNumber, blockNumber)
+    console.log('from to:', fromBlockNumber, blockNumber)
     for (let i = fromBlockNumber; i <= blockNumber; i++) {
       let events: MichelinePrim[]
       try {

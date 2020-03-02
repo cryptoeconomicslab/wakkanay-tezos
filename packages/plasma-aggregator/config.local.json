@@ -180,7 +180,7 @@
       ]
     },
     "OwnershipPredicate": {
-      "deployedAddress": "0xeec918d74c746167564401103096D45BbD494B74",
+      "deployedAddress": "0x01df89eeeeebf54451fac43136cb115607773acf4700",
       "source": [
         {
           "type": "CompiledPredicate",
@@ -210,7 +210,7 @@
                       "children": []
                     },
                     { "type": "NormalInput", "inputIndex": 1, "children": [] },
-                    { "type": "ConstantInput", "name": "secp256k1" }
+                    { "type": "ConstantInput", "name": "ed25519" }
                   ]
                 }
               ],
@@ -218,7 +218,7 @@
             }
           ],
           "entryPoint": "OwnershipT",
-          "constants": [{ "varType": "bytes", "name": "secp256k1" }]
+          "constants": [{ "varType": "bytes", "name": "ed25519" }]
         }
       ]
     },
@@ -532,6 +532,7 @@
   },
   "constantVariableTable": {
     "secp256k1": "0x736563703235366b31",
+    "ed25519": "0x65643235353139",
     "txAddress": "0x0000000000000000000000000000000000000000"
   },
   "commitmentContract": "0x8CdaF0CD259887258Bc13a92C0a6dA92698644C0",
