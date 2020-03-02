@@ -111,7 +111,7 @@ export function decodeInner(d: Codable, input: any): Codable {
     const list: MichelinePrimItem[] = decodeArgs(input)
     d.setData((d as Tuple).data.map((di, i) => decodeInner(di, list[i])))
   } else if (c === 'Struct') {
-    let list: MichelinePrimItem[] = decodeArgs(input)
+    const list: MichelinePrimItem[] = decodeArgs(input)
     d.setData(
       (d as Struct).data.map(({ key, value }, i) => {
         return { key: key, value: decodeInner(value, list[i]) }
