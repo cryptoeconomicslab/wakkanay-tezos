@@ -110,3 +110,6 @@ tmp/
 temp/
 
 docs
+
+.db
+

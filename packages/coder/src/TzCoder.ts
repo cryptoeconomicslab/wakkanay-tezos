@@ -6,9 +6,12 @@ import {
   Tuple,
   Struct
 } from '@cryptoeconomicslab/primitives'
-import flattenDeep from 'lodash.flattendeep'
 import { AbiEncodeError, AbiDecodeError } from './Error'
-import { MichelinePrimItem, isMichelinePrim } from './MichelineTypes'
+import {
+  MichelinePrim,
+  MichelinePrimItem,
+  isMichelinePrim
+} from './MichelineTypes'
 import JSBI from 'jsbi'
 import { TezosLanguageUtil, TezosMessageUtils } from 'conseiljs'
 
@@ -77,15 +80,14 @@ export function encodeInnerToMichelinePrimItem(
  */
 function decodeArgs(arg: MichelinePrimItem): MichelinePrimItem[] {
   if (isMichelinePrim(arg)) {
-    return flattenDeep(
-      arg.args.map((item: MichelinePrimItem) => decodeArgs(item))
-    )
+    return decodeArgs(arg.args[0]).concat([arg.args[1]])
   } else if (arg instanceof Array) {
     return arg.map((item: MichelinePrimItem) => item)
   } else {
     return [arg]
   }
 }
+
 export function decodeInner(d: Codable, input: any): Codable {
   const c = d.constructor.name
   if (c === 'Integer') {
@@ -97,19 +99,13 @@ export function decodeInner(d: Codable, input: any): Codable {
   } else if (c === 'Bytes') {
     d.setData(Bytes.fromHexString(input.bytes).data)
   } else if (c === 'List') {
-    if (input instanceof Array) {
-      d.setData(
-        input.map((item: any) => {
-          const di = (d as List<Codable>).getC().default()
-          decodeInner(di, item.args[1])
-          return di
-        })
-      )
-    } else {
-      const di = (d as List<Codable>).getC().default()
-      decodeInner(di, input.args[1])
-      d.setData([di])
-    }
+    d.setData(
+      input.map((item: any) => {
+        const di = (d as List<Codable>).getC().default()
+        decodeInner(di, item.args[1])
+        return di
+      })
+    )
   } else if (c === 'Tuple') {
     const list: MichelinePrimItem[] = decodeArgs(input)
     d.setData((d as Tuple).data.map((di, i) => decodeInner(di, list[i])))

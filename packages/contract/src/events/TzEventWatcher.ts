@@ -25,6 +25,7 @@ import {
 
 export interface EventWatcherOptions {
   interval?: number
+  initialBlock?: number
 }
 
 export enum EventType {
@@ -91,11 +92,14 @@ export default class EventWatcher implements IEventWatcher {
       // TODO: enter the topic
       // ethereum topic is the contract address
       let latestBlock = await this.eventDb.getLastLoggedBlock(
-        Bytes.fromString('topic')
+        Bytes.fromString(this.contractAddress.toString())
       )
       if (latestBlock == 0) {
-        latestBlock = block.level - 1
+        // initial block
+        latestBlock = this.options.initialBlock || block.level
+        // latestBlock = this.options.initialBlock || 331380
       }
+      console.log(latestBlock)
       await this.poll(latestBlock + 1, block.level, handler)
     } catch (e) {
       console.log(e)
@@ -135,7 +139,7 @@ export default class EventWatcher implements IEventWatcher {
         const seen = await this.eventDb.getSeen(this.getHash(e))
         return !seen
       })
-      console.log('filtered:', JSON.stringify(filtered))
+      // console.log('filtered:', JSON.stringify(filtered))
       filtered.map(async (e: MichelinePrim | symbol) => {
         e = e as MichelinePrim
         const eventName = (e.args[0] as MichelineString).string
@@ -155,11 +159,11 @@ export default class EventWatcher implements IEventWatcher {
         await this.eventDb.addSeen(this.getHash(e))
         return
       })
+      await this.eventDb.setLastLoggedBlock(
+        Bytes.fromString(this.contractAddress.toString()),
+        i
+      )
     }
-    await this.eventDb.setLastLoggedBlock(
-      Bytes.fromString(this.contractAddress.toString()),
-      blockNumber
-    )
     completedHandler()
   }
 
@@ -181,6 +185,9 @@ export default class EventWatcher implements IEventWatcher {
         return (e.args[0] as MichelineString).string === eventType.toString()
       }
     )
+    if (eventStorage.length == 0) {
+      throw new Error('no events')
+    }
     return eventStorage[0].args[1] as MichelinePrim[]
   }
 

@@ -7,8 +7,10 @@ import LightClient, {
   CheckpointManager
 } from '@cryptoeconomicslab/plasma-light-client'
 import { TzWallet } from '@cryptoeconomicslab/tezos-wallet'
+import { Balance } from '@cryptoeconomicslab/wallet'
 import { Address, Bytes } from '@cryptoeconomicslab/primitives'
-import { InMemoryKeyValueStore } from '@cryptoeconomicslab/level-kvs'
+import leveldown from 'leveldown'
+import { LevelKeyValueStore } from '@cryptoeconomicslab/level-kvs'
 import {
   AdjudicationContract,
   DepositContract,
@@ -25,7 +27,10 @@ setupContext({
 })
 
 async function instantiate() {
-  const kvs = new InMemoryKeyValueStore(Bytes.fromString('plasma_aggregator'))
+  const kvs = new LevelKeyValueStore(
+    Bytes.fromString('tezos-liteclient-cli'),
+    leveldown('.db')
+  )
   const eventDb = await kvs.bucket(Bytes.fromString('event'))
 
   // TODO: fix light client interface
@@ -111,9 +116,7 @@ const tokenAddress = process.env.TOKEN_ADDRESS || ''
 export default async function initialize() {
   const lightClient = await instantiate()
   lightClient.registerToken(tokenAddress, depositContractAddress)
-  console.log('start')
   await lightClient.start()
-  console.log('started')
 
   return lightClient
 }
@@ -125,19 +128,46 @@ console.log(
 )
 */
 console.log(
-  TezosMessageUtils.writeAddress('KT1HdPJmvTK879snXnTRuUdhLwYhh3SxEJA6')
+  TezosMessageUtils.writeAddress('KT1LWu6Xi2udMYjzPRaDYvZfFcdvLTPr63Xz')
 )
 
-cli.command('deposit <amount>', 'Deposit').action((amount, options) => {
-  initialize().then(async lightClient => {
-    console.log('deposit', amount)
-    await lightClient.deposit(
-      Number(amount),
-      tokenAddress
-      // TezosMessageUtils.writeAddress('KT1UxjVKVMsKRkwvG9XPqXBRNP8t3rqnmq3J')
-    )
-    console.log('deposited')
-  })
+cli.command('deposit <amount>', 'Deposit').action(async (amount, options) => {
+  const lightClient = await initialize()
+  console.log('deposit', amount)
+  await lightClient.deposit(
+    Number(amount),
+    tokenAddress
+    // TezosMessageUtils.writeAddress('KT1UxjVKVMsKRkwvG9XPqXBRNP8t3rqnmq3J')
+  )
+  console.log('deposited')
 })
+cli.command('balance', 'getBalance').action(async options => {
+  const lightClient = await initialize()
+  const balances = await lightClient.getBalance()
+  const l1balance: Balance = await lightClient['wallet'].getL1Balance()
+  console.log('Balance L1:', Number(l1balance.value.raw) / 1000000, 'tz')
+  console.log('Balance L2:', balances[0].amount / 1000000, 'tz')
+})
+cli
+  .command('transfer <amount> <to>', 'transfer')
+  .action(async (amount, to, options) => {
+    const lightClient = await initialize()
+    await lightClient.transfer(
+      amount,
+      tokenAddress,
+      '0x' + TezosMessageUtils.writeAddress(to)
+    )
+  })
+cli
+  .command('unlock <mnemonic> <email> <password> <address>', 'Import')
+  .action(async (mnemonic, email, password, address, options) => {
+    const a = await TezosWalletUtil.unlockFundraiserIdentity(
+      mnemonic,
+      email,
+      password,
+      address
+    )
+    console.log(a.privateKey, a.publicKeyHash)
+  })
 cli.help()
 cli.parse()

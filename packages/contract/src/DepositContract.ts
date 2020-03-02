@@ -96,7 +96,10 @@ export class DepositContract implements IDepositContract {
       'main',
       JSON.stringify(param)
     )
-    console.log('invokeContract result:', JSON.stringify(result))
+    console.log(
+      `succeed to deposit. open https://babylonnet.tzstats.com/${result.operationGroupID}`
+    )
+    // console.log('invokeContract result:', JSON.stringify(result))
   }
 
   async finalizeCheckpoint(checkpoint: Property) {
@@ -248,7 +251,7 @@ export class DepositContract implements IDepositContract {
     })
     this.eventWatcher.cancel()
     this.eventWatcher.start(() => {
-      console.log('event polled')
+      // console.log('CheckpointFinalized event polled')
     })
   }
 
