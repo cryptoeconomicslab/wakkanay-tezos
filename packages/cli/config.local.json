@@ -210,7 +210,7 @@
                       "children": []
                     },
                     { "type": "NormalInput", "inputIndex": 1, "children": [] },
-                    { "type": "ConstantInput", "name": "secp256k1" }
+                    { "type": "ConstantInput", "name": "ed25519" }
                   ]
                 }
               ],
@@ -218,7 +218,7 @@
             }
           ],
           "entryPoint": "OwnershipT",
-          "constants": [{ "varType": "bytes", "name": "secp256k1" }]
+          "constants": [{ "varType": "bytes", "name": "ed25519" }]
         }
       ]
     },
@@ -532,6 +532,7 @@
   },
   "constantVariableTable": {
     "secp256k1": "0x736563703235366b31",
+    "ed25519": "0x65643235353139",
     "txAddress": "0x0000000000000000000000000000000000000000"
   },
   "commitmentContract": "0x8CdaF0CD259887258Bc13a92C0a6dA92698644C0",
