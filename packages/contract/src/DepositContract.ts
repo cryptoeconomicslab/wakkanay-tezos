@@ -34,7 +34,7 @@ export class DepositContract implements IDepositContract {
       kvs: eventDb,
       contractAddress: address.data
     })
-    this.tokenAddress = 'tz1TGu6TN5GSez2ndXXeDX6LgUDvLzPLqgYV'
+    this.tokenAddress = TezosMessageUtils.readAddress(address.data.substr(2))
   }
 
   async deposit(amount: Integer, initialState: Property) {

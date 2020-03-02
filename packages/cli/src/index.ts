@@ -128,7 +128,7 @@ console.log(
 )
 */
 console.log(
-  TezosMessageUtils.writeAddress('KT1LWu6Xi2udMYjzPRaDYvZfFcdvLTPr63Xz')
+  TezosMessageUtils.writeAddress('KT1LBdoNuEUQyBjN85rQzHqJFXjWZqmN8HeP')
 )
 
 cli.command('deposit <amount>', 'Deposit').action(async (amount, options) => {
