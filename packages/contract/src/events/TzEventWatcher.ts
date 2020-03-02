@@ -92,13 +92,14 @@ export default class EventWatcher implements IEventWatcher {
       // TODO: enter the topic
       // ethereum topic is the contract address
       let latestBlock = await this.eventDb.getLastLoggedBlock(
-        Bytes.fromString('topic')
+        Bytes.fromString(this.contractAddress.toString())
       )
       if (latestBlock == 0) {
         // initial block
-        latestBlock = this.options.initialBlock || 331380
-        // block.level - 1
+        latestBlock = this.options.initialBlock || block.level
+        // latestBlock = this.options.initialBlock || 331380
       }
+      console.log(latestBlock)
       await this.poll(latestBlock + 1, block.level, handler)
     } catch (e) {
       console.log(e)
@@ -158,11 +159,11 @@ export default class EventWatcher implements IEventWatcher {
         await this.eventDb.addSeen(this.getHash(e))
         return
       })
+      await this.eventDb.setLastLoggedBlock(
+        Bytes.fromString(this.contractAddress.toString()),
+        i
+      )
     }
-    await this.eventDb.setLastLoggedBlock(
-      Bytes.fromString(this.contractAddress.toString()),
-      blockNumber
-    )
     completedHandler()
   }
 
