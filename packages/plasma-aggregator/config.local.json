@@ -16,7 +16,7 @@
   },
   "deployedPredicateTable": {
     "StateUpdatePredicate": {
-      "deployedAddress": "0x82D50AD3C1091866E258Fd0f1a7cC9674609D254",
+      "deployedAddress": "0x000053c1edca8bd5c21c61d6f1fd091fa51d562aff1d",
       "source": [
         {
           "type": "CompiledPredicate",
