@@ -538,7 +538,7 @@
   "commitmentContract": "0x8CdaF0CD259887258Bc13a92C0a6dA92698644C0",
   "adjudicationContract": "0x8f0483125FCb9aaAEFA9209D8E9d7b9C8B9Fb90F",
   "payoutContracts": {
-    "DepositContract": "0xA4392264a2d8c998901D10C154C91725b1BF0158",
+    "DepositContract": "0x0182e621b35fb305793d3bc4b55ed29ca6eca4ca1300",
     "OwnershipPayout": "0xf204a4Ef082f5c04bB89F7D5E6568B796096735a"
   },
   "PlasmaETH": "0x13274Fe19C0178208bCbee397af8167A7be27f6f"
