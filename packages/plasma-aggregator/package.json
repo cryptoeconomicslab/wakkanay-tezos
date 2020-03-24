@@ -49,10 +49,10 @@
     }
   },
   "dependencies": {
-    "@cryptoeconomicslab/coder": "0.0.34",
+    "@cryptoeconomicslab/coder": "0.0.38",
     "@cryptoeconomicslab/level-kvs": "^0.0.6",
-    "@cryptoeconomicslab/plasma-aggregator": "0.0.34",
-    "@cryptoeconomicslab/primitives": "0.0.34",
+    "@cryptoeconomicslab/plasma-aggregator": "0.0.38",
+    "@cryptoeconomicslab/primitives": "0.0.38",
     "@cryptoeconomicslab/tezos-coder": "^0.0.9",
     "@cryptoeconomicslab/tezos-contract": "^0.0.9",
     "@cryptoeconomicslab/tezos-wallet": "^0.0.9",

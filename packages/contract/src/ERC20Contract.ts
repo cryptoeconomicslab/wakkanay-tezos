@@ -1,5 +1,5 @@
 import { Address, Integer } from '@cryptoeconomicslab/primitives'
-import { IERC20Contract } from '@cryptoeconomicslab/contract'
+import { IERC20DetailedContract } from '@cryptoeconomicslab/contract'
 import { KeyValueStore } from '@cryptoeconomicslab/db'
 import {
   ContractManager,
@@ -8,7 +8,7 @@ import {
 } from '@cryptoeconomicslab/tezos-wallet'
 import EventWatcher from './events'
 
-export class ERC20Contract implements IERC20Contract {
+export class ERC20Contract implements IERC20DetailedContract {
   private connection: ContractManager
   private blockInfoProvider: TezosBlockInfoProvider
   private eventWatcher: EventWatcher
@@ -34,5 +34,9 @@ export class ERC20Contract implements IERC20Contract {
 
   async approve(spender: Address, amount: Integer): Promise<void> {
     return
+  }
+
+  async decimals(): Promise<Integer> {
+    return Integer.from(6)
   }
 }
