@@ -23,6 +23,16 @@ export class TzWallet implements Wallet {
     )
   }
 
+  /**
+   * @name getPublicKey
+   * @description get public key of wallet
+   */
+  public getPublicKey(): Bytes {
+    return Bytes.fromHexString(
+      TezosMessageUtils.writePublicKey(this.keyStore.publicKey)
+    )
+  }
+
   public async getL1Balance(): Promise<Balance> {
     // can't get an account if it has not participated in a transaction yet
     const account = (await TezosConseilClient.getAccount(
@@ -36,10 +46,10 @@ export class TzWallet implements Wallet {
 
   /**
    * signMessage signed a hex string message
-   * @param message is hex string
+   * @param message is Bytes of message
    */
   public async signMessage(message: Bytes): Promise<Bytes> {
-    const messageBuffer = Buffer.from(message.toHexString())
+    const messageBuffer = Buffer.from(message.toHexString().substr(2), 'hex')
     const privateKeyBuffer = TezosMessageUtils.writeKeyWithHint(
       this.keyStore.privateKey,
       'edsk'
@@ -52,15 +62,17 @@ export class TzWallet implements Wallet {
   }
 
   /**
-   * verify signature
-   * only support Ed25519 key (tz1)
+   * @name verifyMySignature
+   * @description verify signature
+   *     only support Ed25519 key (tz1)
+   * @param message
+   * @param signature
    */
   public async verifyMySignature(
     message: Bytes,
     signature: Bytes
   ): Promise<boolean> {
-    const publicKey = Bytes.fromString(this.keyStore.publicKey)
-    return ed25519Verifier.verify(message, signature, publicKey)
+    return ed25519Verifier.verify(message, signature, this.getPublicKey())
   }
 
   /**

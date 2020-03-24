@@ -49,7 +49,7 @@
     }
   },
   "dependencies": {
-    "@cryptoeconomicslab/signature": "0.0.34",
+    "@cryptoeconomicslab/signature": "0.0.38",
     "@cryptoeconomicslab/tezos-coder": "^0.0.9",
     "@cryptoeconomicslab/wallet": "0.0.34",
     "conseiljs": "^0.3.1",
