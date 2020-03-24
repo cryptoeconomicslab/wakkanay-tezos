@@ -11,7 +11,7 @@ import { KeyValueStore } from '@cryptoeconomicslab/db'
 import { Property } from '@cryptoeconomicslab/ovm'
 import { removeBytesPrefix, TzCoder } from '@cryptoeconomicslab/tezos-coder'
 import { ContractManager, TzWallet } from '@cryptoeconomicslab/tezos-wallet'
-import EventWatcher, { EventType } from './events'
+import EventWatcher, { EventType, EventWatcherOptions } from './events'
 import { Checkpoint } from '@cryptoeconomicslab/plasma'
 
 /**
@@ -25,14 +25,16 @@ export class DepositContract implements IDepositContract {
   constructor(
     readonly address: Address,
     eventDb: KeyValueStore,
-    wallet: TzWallet
+    wallet: TzWallet,
+    options: EventWatcherOptions
   ) {
     this.connection = new ContractManager(wallet, address)
     this.eventWatcher = new EventWatcher({
       tezosNodeEndpoint: wallet.tezosNodeEndpoint,
       conseilServerInfo: wallet.conseilServerInfo,
       kvs: eventDb,
-      contractAddress: address.data
+      contractAddress: address.data,
+      options
     })
     this.tokenAddress = TezosMessageUtils.readAddress(address.data.substr(2))
   }
@@ -265,5 +267,21 @@ export class DepositContract implements IDepositContract {
     this.eventWatcher.start(() => {
       console.log('event polled')
     })
+  }
+
+  /**
+   * Start to subscribe DepositedRangeExtended event
+   * @param handler
+   */
+  subscribeDepositedRangeExtended(handler: (range: Range) => void): void {
+    // throw new Error('method not implemented.')
+  }
+
+  /**
+   * Start to subscribe DepositedRangeRemoved event
+   * @param handler
+   */
+  subscribeDepositedRangeRemoved(handler: (range: Range) => void): void {
+    // throw new Error('method not implemented.')
   }
 }

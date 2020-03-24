@@ -94,7 +94,10 @@ export default class EventWatcher implements IEventWatcher {
       let latestBlock = await this.eventDb.getLastLoggedBlock(
         Bytes.fromString(this.contractAddress.toString())
       )
-      if (latestBlock == 0) {
+      if (
+        latestBlock == 0 ||
+        (this.options.initialBlock && latestBlock < this.options.initialBlock)
+      ) {
         // initial block
         latestBlock = this.options.initialBlock || block.level
         // latestBlock = this.options.initialBlock || 331380

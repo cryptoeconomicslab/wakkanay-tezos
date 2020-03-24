@@ -151,9 +151,7 @@ describe('TzCoder', () => {
 
     test('decode BigNumber', () => {
       const b = Bytes.fromHexString('0x050001')
-      expect(TzCoder.decode(BigNumber.default(), b)).toStrictEqual(
-        BigNumber.from(1)
-      )
+      expect(TzCoder.decode(BigNumber.default(), b)).toEqual(BigNumber.from(1))
     })
 
     test('decode Struct', () => {
@@ -347,7 +345,7 @@ describe('TzCoder', () => {
           )
         )
       )
-      expect(record).toStrictEqual(su)
+      expect(record).toEqual(su)
     })
 
     test('succeed to decode TxReciept', async () => {
@@ -373,7 +371,7 @@ describe('TzCoder', () => {
           )
         )
       )
-      expect(record).toStrictEqual(receipt)
+      expect(record).toEqual(receipt)
     })
   })
 })

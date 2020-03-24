@@ -58,7 +58,9 @@ const instantiate = async (): Promise<Aggregator> => {
   const eventDb = await kvs.bucket(Bytes.fromString('event'))
   function depositContractFactory(address: Address) {
     console.log('depositContractFactory', address)
-    return new DepositContract(address, eventDb, wallet)
+    return new DepositContract(address, eventDb, wallet, {
+      initialBlock: Number(process.env.INITIAL_BLOCK || 1)
+    })
   }
   function commitmentContractFactory(address: Address) {
     return new CommitmentContract(address, eventDb, wallet)
@@ -71,7 +73,8 @@ const instantiate = async (): Promise<Aggregator> => {
     witnessDb,
     depositContractFactory,
     commitmentContractFactory,
-    loadConfigFile(process.env.CONFIG_FILE || 'config.local.json')
+    loadConfigFile(process.env.CONFIG_FILE || 'config.local.json'),
+    { isSubmitter: true, port: Number(process.env.PORT || 3000) }
   )
 }
 

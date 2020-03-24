@@ -49,10 +49,10 @@
     }
   },
   "devDependencies": {
-    "@cryptoeconomicslab/coder": "0.0.34",
-    "@cryptoeconomicslab/ovm": "0.0.34",
-    "@cryptoeconomicslab/plasma": "0.0.34",
-    "@cryptoeconomicslab/primitives": "0.0.34",
+    "@cryptoeconomicslab/coder": "0.0.38",
+    "@cryptoeconomicslab/ovm": "0.0.38",
+    "@cryptoeconomicslab/plasma": "0.0.38",
+    "@cryptoeconomicslab/primitives": "0.0.38",
     "@types/lodash.flattendeep": "^4.4.6"
   },
   "peerDependencies": {

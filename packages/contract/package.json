@@ -49,18 +49,19 @@
     }
   },
   "dependencies": {
-    "@cryptoeconomicslab/contract": "0.0.34",
-    "@cryptoeconomicslab/db": "0.0.34",
+    "@cryptoeconomicslab/contract": "0.0.38",
+    "@cryptoeconomicslab/db": "0.0.38",
     "@cryptoeconomicslab/level-kvs": "^0.0.6",
-    "@cryptoeconomicslab/ovm": "0.0.34",
-    "@cryptoeconomicslab/plasma": "0.0.34",
+    "@cryptoeconomicslab/ovm": "0.0.38",
+    "@cryptoeconomicslab/plasma": "0.0.38",
     "@cryptoeconomicslab/tezos-coder": "^0.0.9",
     "@cryptoeconomicslab/tezos-wallet": "^0.0.9",
     "conseiljs": "^0.3.1",
-    "lodash.flattendeep": "^4.4.0"
+    "lodash.flattendeep": "^4.4.0",
+    "jsbi": "^3.1.2"
   },
   "devDependencies": {
-    "@cryptoeconomicslab/primitives": "0.0.34",
+    "@cryptoeconomicslab/primitives": "0.0.38",
     "@types/libsodium-wrappers-sumo": "^0.7.3",
     "@types/lodash.flattendeep": "^4.4.6"
   },

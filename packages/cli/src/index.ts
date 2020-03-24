@@ -1,11 +1,7 @@
 import { TezosMessageUtils, TezosWalletUtil } from 'conseiljs'
 import { config } from 'dotenv'
 config()
-import LightClient, {
-  StateManager,
-  SyncManager,
-  CheckpointManager
-} from '@cryptoeconomicslab/plasma-light-client'
+import LightClient from '@cryptoeconomicslab/plasma-light-client'
 import { TzWallet } from '@cryptoeconomicslab/tezos-wallet'
 import { Balance } from '@cryptoeconomicslab/wallet'
 import { Address, Bytes } from '@cryptoeconomicslab/primitives'
@@ -55,18 +51,11 @@ async function instantiate() {
     }
   )
 
-  function depositContractFactory(address) {
-    return new DepositContract(address, eventDb, wallet)
+  function depositContractFactory(address: Address) {
+    return new DepositContract(address, eventDb, wallet, {
+      initialBlock: Number(process.env.INITIAL_BLOCK || 1)
+    })
   }
-
-  const stateDb = await kvs.bucket(Bytes.fromString('state'))
-  const stateManager = new StateManager(stateDb)
-
-  const syncDb = await kvs.bucket(Bytes.fromString('sync'))
-  const syncManager = new SyncManager(syncDb)
-
-  const checkpointDb = await kvs.bucket(Bytes.fromString('checkpoint'))
-  const checkpointManager = new CheckpointManager(checkpointDb)
 
   const adjudicationContract = new AdjudicationContract(
     Address.from(process.env.ADJUDICATION_CONTRACT_ADDRESS || ''),
@@ -74,11 +63,6 @@ async function instantiate() {
     wallet
   )
   const commitmentContract = new CommitmentContract(
-    Address.from(process.env.COMMITMENT_CONTRACT_ADDRESS || ''),
-    eventDb,
-    wallet
-  )
-  const erc20Contract = new ERC20Contract(
     Address.from(process.env.COMMITMENT_CONTRACT_ADDRESS || ''),
     eventDb,
     wallet
@@ -95,27 +79,23 @@ async function instantiate() {
   const mainChainEnv = process.env.MAIN_CHAIN_ENV || 'local'
   const config = await import(`../config.${mainChainEnv}`)
 
-  return new LightClient(
+  return LightClient.initilize({
     wallet,
-    kvs,
+    witnessDb: kvs,
     adjudicationContract,
     depositContractFactory,
     tokenContractFactory,
     commitmentContract,
     ownershipPayoutContract,
-    stateManager,
-    syncManager,
-    checkpointManager,
-    config
-  )
+    deciderConfig: config,
+    aggregatorEndpoint: process.env.AGGREGATOR_HOST
+  })
 }
 
-const depositContractAddress = process.env.DEPOSIT_CONTRACT_ADDRESS || ''
 const tokenAddress = process.env.TOKEN_ADDRESS || ''
 
 export default async function initialize() {
   const lightClient = await instantiate()
-  lightClient.registerToken(tokenAddress, depositContractAddress)
   await lightClient.start()
 
   return lightClient

@@ -32,11 +32,11 @@
     "clean": "rm -rf lib docs"
   },
   "dependencies": {
-    "@cryptoeconomicslab/context": "0.0.34",
+    "@cryptoeconomicslab/context": "0.0.38",
     "@cryptoeconomicslab/level-kvs": "^0.0.6",
-    "@cryptoeconomicslab/ovm": "0.0.34",
-    "@cryptoeconomicslab/plasma-light-client": "0.0.34",
-    "@cryptoeconomicslab/primitives": "0.0.34",
+    "@cryptoeconomicslab/ovm": "0.0.38",
+    "@cryptoeconomicslab/plasma-light-client": "0.0.38",
+    "@cryptoeconomicslab/primitives": "0.0.38",
     "@cryptoeconomicslab/tezos-coder": "^0.0.9",
     "@cryptoeconomicslab/tezos-contract": "^0.0.9",
     "@cryptoeconomicslab/tezos-wallet": "^0.0.9",

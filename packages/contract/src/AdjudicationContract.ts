@@ -73,17 +73,17 @@ export class AdjudicationContract implements IAdjudicationContract {
       createdBlock: BigNumber
     ) => void
   ): void {
-    throw new Error('Method not implemented.')
+    // throw new Error('Method not implemented.')
   }
   subscribeClaimChallenged(
     handler: (gameId: Bytes, challengeGameId: Bytes) => void
   ): void {
-    throw new Error('Method not implemented.')
+    // throw new Error('Method not implemented.')
   }
   subscribeClaimDecided(
     handler: (gameId: Bytes, decision: boolean) => void
   ): void {
-    throw new Error('Method not implemented.')
+    // throw new Error('Method not implemented.')
   }
   subscribeChallengeRemoved(
     handler: (gameId: Bytes, challengeGameId: Bytes) => void
