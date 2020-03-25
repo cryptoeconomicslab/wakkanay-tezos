@@ -3,11 +3,11 @@ import { Address, Bytes, BigNumber } from '@cryptoeconomicslab/primitives'
 import { ed25519Verifier } from '@cryptoeconomicslab/signature'
 import {
   ConseilServerInfo,
+  CryptoUtils,
   KeyStore,
   TezosConseilClient,
   TezosMessageUtils
 } from 'conseiljs'
-import tweetnacl from 'tweetnacl'
 import { ContractManager } from './helpers'
 
 export class TzWallet implements Wallet {
@@ -44,8 +44,11 @@ export class TzWallet implements Wallet {
       this.keyStore.privateKey,
       'edsk'
     )
-    const signature = tweetnacl.sign.detached(messageBuffer, privateKeyBuffer)
-    return Bytes.fromHexString(Buffer.from(signature).toString('hex'))
+    const signatureBuffer = await CryptoUtils.signDetached(
+      messageBuffer,
+      privateKeyBuffer
+    )
+    return Bytes.fromHexString(signatureBuffer.toString('hex'))
   }
 
   /**
