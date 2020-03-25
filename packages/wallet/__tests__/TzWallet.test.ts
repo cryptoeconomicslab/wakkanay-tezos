@@ -1,7 +1,7 @@
-jest.unmock('conseiljs')
+/* eslint-disable @typescript-eslint/no-var-requires */
 const conseiljs = require('conseiljs')
-const { TzWalletFactory } = require('../src')
-const { Bytes } = require('@cryptoeconomicslab/primitives')
+import { TzWalletFactory } from '../src'
+import { Bytes } from '@cryptoeconomicslab/primitives'
 
 const mockGetAccount = jest.fn().mockImplementation(async () => {
   return [{ balance: 100 }]
@@ -14,7 +14,7 @@ conseiljs.TezosConseilClient = {
 describe('TzWallet', () => {
   let factory, wallet
   beforeEach(async () => {
-    factory = new TzWalletFactory()
+    factory = new TzWalletFactory('')
     wallet = await factory.fromPrivateKey(
       'edskRpVqFG2FHo11aB9pzbnHBiPBWhNWdwtNyQSfEEhDf5jhFbAtNS41vg9as7LSYZv6rEbtJTwyyEg9cNDdcAkSr9Z7hfvquB'
     )
