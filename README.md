@@ -1,4 +1,4 @@
-# Wakkanay-Tezos
+# wakkanay-tezos
 
 This repository contains L1 adapter code for Tezos. L1 adaptor is the adaptor to support any blockchain for OVM client. Please also see ["What L1 adaptor is"](https://github.com/cryptoeconomicslab/ovm-plasma-chamber-spec/blob/master/core-spec/index.md#l1-adaptor-spec).
 
