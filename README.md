@@ -21,7 +21,15 @@ npm i
 lerna bootstrap
 ```
 
-### build
+#### Installation on debian/ubuntu
+
+```
+sudo apt install libusb-1.0-0-dev
+npm i
+lerna bootstrap
+```
+
+### Build
 
 ```
 lerna run build
