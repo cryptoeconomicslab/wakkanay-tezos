@@ -49,7 +49,7 @@ export class ContractManager {
     /*
     console.log(
       'to:',
-      TezosMessageUtils.readAddress(this.contractAddress.data.substr(2))
+      TezosMessageUtils.readAddress(this.contractAddress.data)
     )
     console.log('fee:', fee)
     console.log('params:', params)
@@ -57,7 +57,7 @@ export class ContractManager {
     const result = await TezosNodeWriter.sendContractInvocationOperation(
       this.tzWallet.tezosNodeEndpoint,
       this.tzWallet.keyStore,
-      TezosMessageUtils.readAddress(this.contractAddress.data.substr(2)),
+      TezosMessageUtils.readAddress(this.contractAddress.data),
       amount,
       fee,
       derivationPath,

@@ -13,6 +13,7 @@ wakkanay-tezos requires the following to run:
 - [Node.js](https://nodejs.org/) v10+
 - [npm](https://www.npmjs.com/) (normally comes with Node.js)
 - [lerna](https://github.com/lerna/lerna) v3+
+- [tsc](https://www.npmjs.com/package/typescript) v3+ `npm install -g typescript@next`
 
 ### Install
 
@@ -39,6 +40,12 @@ lerna run build
 
 ```
 npm test
+```
+
+or
+
+```
+npm run build && node lib/index.js deposit 1
 ```
 
 ### Docmentation
