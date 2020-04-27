@@ -1,4 +1,4 @@
-import {TezosMessageUtils, TezosWalletUtil, StoreType} from 'conseiljs'
+import {TezosMessageUtils, TezosWalletUtil, StoreType, TezosNodeWriter} from 'conseiljs'
 import {config} from 'dotenv'
 config()
 import LightClient, {StateManager, SyncManager, CheckpointManager} from '@cryptoeconomicslab/plasma-light-client'
@@ -32,10 +32,6 @@ async function instantiate() {
     throw new Error('must require MAIN_CHAIN_HOST')
   }
   const wallet = new TzWallet(await TezosWalletUtil.restoreIdentityWithSecretKey(process.env.PRIVATE_KEY as string), tezosNodeEndpoint, {url, apiKey, network})
-  // console.log(`getKeysFromMnemonicAndPassphrase: ${JSON.stringify(await
-  // TezosWalletUtil.getKeysFromMnemonicAndPassphrase("orbit avoid identify shoot
-  // volcano erupt chuckle tell devote ensure tenant coupl" +     "e indoor
-  // endorse zebra", "lLDv8wNiZK", StoreType.Mnemonic))}`)
 
   function depositContractFactory(address) {
     return new DepositContract(address, eventDb, wallet)
@@ -81,7 +77,7 @@ console.log(
   TezosMessageUtils.writeAddress('tz1TGu6TN5GSez2ndXXeDX6LgUDvLzPLqgYV')
 )
 */
-console.log(TezosMessageUtils.writeAddress('KT1LBdoNuEUQyBjN85rQzHqJFXjWZqmN8HeP'))
+// console.log(TezosMessageUtils.writeAddress('KT1LBdoNuEUQyBjN85rQzHqJFXjWZqmN8HeP'))
 
 cli
   .command('deposit <amount>', 'Deposit')
@@ -103,13 +99,13 @@ cli
       const balances = await lightClient.getBalance()
       console.log('Balance L2:', balances[0].amount / 1000000, 'tz')
     } catch (e) {
-      console.error(`getBalance (L2) failed`)
+      console.error(`getBalance (L2) failed - ${e.message}`)
     }
     try {
       const l1balance : Balance = await lightClient['wallet'].getL1Balance()
       console.log('Balance L1:', Number(l1balance.value.raw) / 1000000, 'tz')
     } catch (e) {
-      console.error(`getL1Balance failed`)
+      console.error(`getL1Balance failed - ${e.message}`, e)
     }
     console.log('getBalance end');
     process.exit();
@@ -119,6 +115,7 @@ cli
   .action(async(amount, to, options) => {
     const lightClient = await initialize()
     await lightClient.transfer(amount, tokenAddress, '0x' + TezosMessageUtils.writeAddress(to))
+    process.exit();
   })
 cli
   .command('unlock <mnemonic> <email> <password> <address>', 'Import')
@@ -127,5 +124,23 @@ cli
     console.log(a.privateKey, a.publicKeyHash)
     process.exit();
   })
+
+cli
+.command('activate', 'Activate')
+.action(async()=>{
+  const tezosNodeEndpoint = process.env.TEZOS_NODE_ENDPOINT as string
+  const faucetAccount = require('../account.json')
+  const faucetKeys = await TezosWalletUtil.unlockFundraiserIdentity(faucetAccount.mnemonic.join(' '), faucetAccount.email, faucetAccount.password, faucetAccount.pkh);
+  console.log(faucetAccount)
+  console.log(faucetKeys)
+  const nodeResult1 = await TezosNodeWriter.sendIdentityActivationOperation(tezosNodeEndpoint, faucetKeys, faucetAccount.secret);
+  if (JSON.parse(nodeResult1["operationGroupID"])[0].id === 'failure') throw new Error(`sendIdentityActivationOperation: ${JSON.parse(nodeResult1["operationGroupID"])[0].msg}`)
+  const keys = await TezosWalletUtil.getKeysFromMnemonicAndPassphrase(faucetAccount.mnemonic.join(' '), faucetAccount.password, StoreType.Mnemonic)
+  const nodeResult2 = await TezosNodeWriter.sendKeyRevealOperation(tezosNodeEndpoint, keys, 50000);
+  if (JSON.parse(nodeResult2["operationGroupID"])[0].id === 'failure') throw new Error(`sendKeyRevealOperation: ${JSON.parse(nodeResult2["operationGroupID"])[0].msg}`)
+  console.log(nodeResult1)
+  console.log(nodeResult2)
+  process.exit();
+})
 cli.help()
 cli.parse()
