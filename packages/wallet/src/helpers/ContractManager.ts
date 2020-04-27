@@ -45,7 +45,7 @@ export class ContractManager {
     // BIP44 Derivation Path if signed with hardware, empty if signed with software
     const derivationPath = ''
 
-    const fee: number = (await this.estimateFee()) + 40000
+    const fee: number = (await this.estimateFee())
     /*
     console.log(
       'to:',

@@ -2,7 +2,8 @@ import {
   TezosMessageUtils,
   TezosWalletUtil,
   StoreType,
-  TezosNodeWriter
+  TezosNodeWriter,
+  TezosNodeReader
 } from 'conseiljs'
 import { config } from 'dotenv'
 config()
@@ -141,9 +142,12 @@ cli.command('deposit <amount>', 'Deposit').action(async (amount, options) => {
   await lightClient.deposit(
     Number(amount),
     tokenAddress
-    // TezosMessageUtils.writeAddress('KT1UxjVKVMsKRkwvG9XPqXBRNP8t3rqnmq3J')
   )
+
   console.log('deposited')
+  const mempool = await getMempool()
+  console.log(mempool)
+  console.log('^^^ See your mempool tx')
   process.exit()
 })
 cli.command('balance', 'getBalance').action(async options => {
@@ -188,6 +192,19 @@ cli
     process.exit()
   })
 
+async function getMempool() {
+  const tezosNodeEndpoint = process.env.TEZOS_NODE_ENDPOINT as string
+  const chainId = 'NetXjD3HPJJjmcd'
+  const mempool = await TezosNodeReader.getMempoolOperationsForAccount(tezosNodeEndpoint, faucetAccount.pkh, chainId)
+  return mempool
+}
+cli.command('mempool').action(async _=>{
+  console.log(`Start fetching mempool for faucet account...`)
+  const mempool = await getMempool()
+  console.log(mempool)
+  console.log(`Fetching mempool finished.`)
+  process.exit()
+})
 cli.command('activate', 'Activate').action(async () => {
   const tezosNodeEndpoint = process.env.TEZOS_NODE_ENDPOINT as string
   const faucetKeys = await TezosWalletUtil.unlockFundraiserIdentity(

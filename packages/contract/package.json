@@ -56,7 +56,7 @@
     "@cryptoeconomicslab/plasma": "0.0.34",
     "@cryptoeconomicslab/tezos-coder": "^0.0.9",
     "@cryptoeconomicslab/tezos-wallet": "^0.0.9",
-    "conseiljs": "^0.3.1",
+    "conseiljs": "^0.4.1",
     "lodash.flattendeep": "^4.4.0"
   },
   "devDependencies": {

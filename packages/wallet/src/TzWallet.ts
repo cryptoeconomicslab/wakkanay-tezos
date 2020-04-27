@@ -38,7 +38,8 @@ export class TzWallet implements Wallet {
     const account = (await TezosConseilClient.getAccount(
       this.conseilServerInfo,
       this.conseilServerInfo.network,
-      TezosMessageUtils.readAddress(this.getAddress().data.substr(2))
+      this.keyStore.publicKeyHash
+      // TezosMessageUtils.readAddress(this.getAddress().data.substr(2))
     )) as any
     const balance = account ? account.balance : 0
     return new Balance(new BigNumber(balance), 6, 'tz')
