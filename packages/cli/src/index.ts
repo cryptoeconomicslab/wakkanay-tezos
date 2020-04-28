@@ -123,18 +123,26 @@ const tokenAddress = TezosMessageUtils.writeAddress(process.env
 export default async function initialize() {
   const lightClient = await instantiate()
   lightClient.registerToken(tokenAddress, depositContractAddress)
-  await lightClient.start()
+  try {
+    await lightClient.start()
+  }catch(e){
+    console.error('catched')
+    process.exit(1)
+  }
+
 
   return lightClient
 }
 
-/*
-token address is 000053c1edca8bd5c21c61d6f1fd091fa51d562aff1d
-console.log(
-  TezosMessageUtils.writeAddress('tz1TGu6TN5GSez2ndXXeDX6LgUDvLzPLqgYV')
-)
-*/
-// console.log(TezosMessageUtils.writeAddress('KT1LBdoNuEUQyBjN85rQzHqJFXjWZqmN8HeP'))
+
+async function getMempool(){
+  const mempool = await TezosNodeReader.getMempoolOperationsForAccount(process.env.TEZOS_NODE_ENDPOINT as string, faucetAccount.pkh, 'NetXjD3HPJJjmcd');
+  return mempool;
+}
+cli.command('mempool').action(async (amount, options) => {
+  console.log(await getMempool())
+  process.exit()
+})
 
 cli.command('deposit <amount>', 'Deposit').action(async (amount, options) => {
   const lightClient = await initialize()
@@ -145,9 +153,7 @@ cli.command('deposit <amount>', 'Deposit').action(async (amount, options) => {
   )
 
   console.log('deposited')
-  const mempool = await getMempool()
-  console.log(mempool)
-  console.log('^^^ See your mempool tx')
+  console.log(await getMempool())
   process.exit()
 })
 cli.command('balance', 'getBalance').action(async options => {
@@ -192,19 +198,6 @@ cli
     process.exit()
   })
 
-async function getMempool() {
-  const tezosNodeEndpoint = process.env.TEZOS_NODE_ENDPOINT as string
-  const chainId = 'NetXjD3HPJJjmcd'
-  const mempool = await TezosNodeReader.getMempoolOperationsForAccount(tezosNodeEndpoint, faucetAccount.pkh, chainId)
-  return mempool
-}
-cli.command('mempool').action(async _=>{
-  console.log(`Start fetching mempool for faucet account...`)
-  const mempool = await getMempool()
-  console.log(mempool)
-  console.log(`Fetching mempool finished.`)
-  process.exit()
-})
 cli.command('activate', 'Activate').action(async () => {
   const tezosNodeEndpoint = process.env.TEZOS_NODE_ENDPOINT as string
   const faucetKeys = await TezosWalletUtil.unlockFundraiserIdentity(
