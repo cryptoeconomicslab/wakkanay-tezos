@@ -125,19 +125,21 @@ export default async function initialize() {
   lightClient.registerToken(tokenAddress, depositContractAddress)
   try {
     await lightClient.start()
-  }catch(e){
+  } catch (e) {
     console.error('catched')
     process.exit(1)
   }
 
-
   return lightClient
 }
 
-
-async function getMempool(){
-  const mempool = await TezosNodeReader.getMempoolOperationsForAccount(process.env.TEZOS_NODE_ENDPOINT as string, faucetAccount.pkh, 'NetXjD3HPJJjmcd');
-  return mempool;
+async function getMempool() {
+  const mempool = await TezosNodeReader.getMempoolOperationsForAccount(
+    process.env.TEZOS_NODE_ENDPOINT as string,
+    faucetAccount.pkh,
+    'NetXjD3HPJJjmcd'
+  )
+  return mempool
 }
 cli.command('mempool').action(async (amount, options) => {
   console.log(await getMempool())
@@ -147,10 +149,7 @@ cli.command('mempool').action(async (amount, options) => {
 cli.command('deposit <amount>', 'Deposit').action(async (amount, options) => {
   const lightClient = await initialize()
   console.log('deposit', amount)
-  await lightClient.deposit(
-    Number(amount),
-    tokenAddress
-  )
+  await lightClient.deposit(Number(amount), tokenAddress)
 
   console.log('deposited')
   console.log(await getMempool())
