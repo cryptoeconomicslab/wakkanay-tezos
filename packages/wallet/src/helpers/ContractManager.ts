@@ -10,8 +10,8 @@ import {
 import { TzWallet } from '../'
 
 // TODO: research default limits per operation
-export const DefaultTransactionStorageLimit = 15000
-export const DefaultTransactionGasLimit = 400000
+export const DefaultTransactionStorageLimit = 50000
+export const DefaultTransactionGasLimit = 1000000
 
 export class ContractManager {
   constructor(readonly tzWallet: TzWallet, readonly contractAddress: Address) {}
@@ -45,7 +45,7 @@ export class ContractManager {
     // BIP44 Derivation Path if signed with hardware, empty if signed with software
     const derivationPath = ''
 
-    const fee: number = (await this.estimateFee()) + 40000
+    const fee: number = (await this.estimateFee()) + 900000
     /*
     console.log(
       'to:',

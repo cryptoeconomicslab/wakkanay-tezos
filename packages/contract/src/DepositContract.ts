@@ -97,7 +97,7 @@ export class DepositContract implements IDepositContract {
       JSON.stringify(param)
     )
     console.log(
-      `succeed to deposit. open https://babylonnet.tzstats.com/${result.operationGroupID}`
+      `succeed to deposit. open https://arronax.io/tezos/${process.env.TEZOS_NETWORK}/operation_groups/${result.operationGroupID.replace(/"/g, '')}`
     )
     // console.log('invokeContract result:', JSON.stringify(result))
   }
