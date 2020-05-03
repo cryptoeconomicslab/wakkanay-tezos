@@ -1,3 +1,6 @@
+import { config } from 'dotenv'
+config()
+
 import { TezosLanguageUtil, TezosMessageUtils } from 'conseiljs'
 import {
   Address,
@@ -34,7 +37,7 @@ export class DepositContract implements IDepositContract {
       kvs: eventDb,
       contractAddress: address.data
     })
-    this.tokenAddress = TezosMessageUtils.readAddress(address.data.substr(2))
+    this.tokenAddress = process.env.NATIVE_TOKEN_BASE58 as string
   }
 
   async deposit(amount: Integer, initialState: Property) {
@@ -97,7 +100,7 @@ export class DepositContract implements IDepositContract {
       JSON.stringify(param)
     )
     console.log(
-      `succeed to deposit. open https://babylonnet.tzstats.com/${result.operationGroupID}`
+      `succeed to deposit. open https://arronax.io/tezos/carthagenet/operation_groups/${result.operationGroupID.replace(/"/g, '')}`
     )
     // console.log('invokeContract result:', JSON.stringify(result))
   }
