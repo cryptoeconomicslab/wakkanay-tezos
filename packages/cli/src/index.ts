@@ -121,25 +121,15 @@ export default async function initialize() {
   return lightClient
 }
 
-/*
-token address is 000053c1edca8bd5c21c61d6f1fd091fa51d562aff1d
-console.log(
-  TezosMessageUtils.writeAddress('tz1TGu6TN5GSez2ndXXeDX6LgUDvLzPLqgYV')
-)
-*/
-console.log(
-  TezosMessageUtils.writeAddress('KT1LBdoNuEUQyBjN85rQzHqJFXjWZqmN8HeP')
-)
-
 cli.command('deposit <amount>', 'Deposit').action(async (amount, options) => {
   const lightClient = await initialize()
   console.log('deposit', amount)
   await lightClient.deposit(
     Number(amount),
     tokenAddress
-    // TezosMessageUtils.writeAddress('KT1UxjVKVMsKRkwvG9XPqXBRNP8t3rqnmq3J')
   )
   console.log('deposited')
+  process.exit();
 })
 cli.command('balance', 'getBalance').action(async options => {
   const lightClient = await initialize()
@@ -147,6 +137,7 @@ cli.command('balance', 'getBalance').action(async options => {
   const l1balance: Balance = await lightClient['wallet'].getL1Balance()
   console.log('Balance L1:', Number(l1balance.value.raw) / 1000000, 'tz')
   console.log('Balance L2:', balances[0].amount / 1000000, 'tz')
+  process.exit();
 })
 cli
   .command('transfer <amount> <to>', 'transfer')
@@ -157,6 +148,7 @@ cli
       tokenAddress,
       '0x' + TezosMessageUtils.writeAddress(to)
     )
+    process.exit();
   })
 cli
   .command('unlock <mnemonic> <email> <password> <address>', 'Import')
@@ -168,6 +160,7 @@ cli
       address
     )
     console.log(a.privateKey, a.publicKeyHash)
+    process.exit();
   })
 cli.help()
 cli.parse()
