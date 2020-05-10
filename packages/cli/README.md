@@ -15,5 +15,5 @@ node lib/index.js deposit 1
 ### Confirm your balance in the L1 and L2
 
 ```
-node lib/index.js balance
+rm -rf .db && node lib/index.js balance
 ```
