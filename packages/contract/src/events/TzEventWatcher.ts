@@ -43,7 +43,7 @@ export type TzEventWatcherArgType = {
   blockInfoProvider?: BlockInfoProvider
 }
 
-const DEFAULT_INTERVAL = 5000
+const DEFAULT_INTERVAL = 10000
 
 export default class EventWatcher implements IEventWatcher {
   public blockInfoProvider: BlockInfoProvider
@@ -99,8 +99,7 @@ export default class EventWatcher implements IEventWatcher {
         latestBlock = this.options.initialBlock || block.level
         // latestBlock = this.options.initialBlock || 331380
       }
-      console.log(latestBlock)
-      await this.poll(latestBlock + 1, block.level, handler)
+      await this.poll(latestBlock, block.level, handler)
     } catch (e) {
       console.log(e)
       if (errorHandler) {
@@ -123,7 +122,7 @@ export default class EventWatcher implements IEventWatcher {
     blockNumber: number,
     completedHandler: CompletedHandler
   ) {
-    console.log('from to:', fromBlockNumber, blockNumber)
+    // console.log('from to:', fromBlockNumber, blockNumber)
     for (let i = fromBlockNumber; i <= blockNumber; i++) {
       let events: MichelinePrim[]
       try {
@@ -139,7 +138,6 @@ export default class EventWatcher implements IEventWatcher {
         const seen = await this.eventDb.getSeen(this.getHash(e))
         return !seen
       })
-      // console.log('filtered:', JSON.stringify(filtered))
       filtered.map(async (e: MichelinePrim | symbol) => {
         e = e as MichelinePrim
         const eventName = (e.args[0] as MichelineString).string
