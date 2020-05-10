@@ -2,15 +2,17 @@
 
 [![npm](https://img.shields.io/npm/v/@cryptoeconomicslab/tezos-liteclient-cli)](https://www.npmjs.com/package/@cryptoeconomicslab/tezos-liteclient-cli)
 
-### Deposit
+### Deposit L1 fund to L2
 
 ```
-cp .sample.env .env # [addr2hex.js](https://gist.github.com/shogochiai/5518de3abe358c83bc9075e44a629968)
+node script/addr2hex.js KT1....XXX # When you deployed a new contract.
+cp .sample.env .env
+vi .env # Replace: CONTRACT_BASE58,{DEPOSIT,COMMITMENT,ADJUDICATION}_CONTRACT_ADDERSS
 lerna clean -y && lerna bootstrap && lerna run build
 node lib/index.js deposit 1
 ```
 
-### Balance
+### Confirm your balance in the L1 and L2
 
 ```
 node lib/index.js balance
