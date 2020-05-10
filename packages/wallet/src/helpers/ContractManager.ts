@@ -8,10 +8,13 @@ import {
   TezosMessageUtils
 } from 'conseiljs'
 import { TzWallet } from '../'
+const FEE_GRADE = process.env.FEE_GRADE as string
+const FEE_BONUS = process.env.FEE_BONUS as number
+const GAS_LIMIT = process.env.GAS_LIMIT as number
 
 // TODO: research default limits per operation
 export const DefaultTransactionStorageLimit = 15000
-export const DefaultTransactionGasLimit = 500000
+export const DefaultTransactionGasLimit = GAS_LIMIT ? GAS_LIMIT : 500000
 
 export class ContractManager {
   constructor(readonly tzWallet: TzWallet, readonly contractAddress: Address) {}
@@ -28,7 +31,7 @@ export class ContractManager {
       operationKindType
     )
 
-    return result[0].high + 40000
+    return result[0][FEE_GRADE ? FEE_GRADE : "high"] + (FEE_BONUS ? FEE_BONUS : 0);
   }
 
   /**
