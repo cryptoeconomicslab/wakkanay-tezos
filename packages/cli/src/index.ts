@@ -122,14 +122,14 @@ export default async function initialize() {
 }
 
 cli.command('deposit <amount>', 'Deposit').action(async (amount, options) => {
+  if (amount > 100) {
+    throw 'The amount may not be greater than 100.'
+  }
   const lightClient = await initialize()
   console.log('deposit', amount)
-  await lightClient.deposit(
-    Number(amount),
-    tokenAddress
-  )
+  await lightClient.deposit(Number(amount), tokenAddress)
   console.log('deposited')
-  process.exit();
+  process.exit()
 })
 cli.command('balance', 'getBalance').action(async options => {
   const lightClient = await initialize()
@@ -137,7 +137,7 @@ cli.command('balance', 'getBalance').action(async options => {
   const l1balance: Balance = await lightClient['wallet'].getL1Balance()
   console.log('Balance L1:', Number(l1balance.value.raw) / 1000000, 'tz')
   console.log('Balance L2:', balances[0].amount / 1000000, 'tz')
-  process.exit();
+  process.exit()
 })
 cli
   .command('transfer <amount> <to>', 'transfer')
@@ -148,7 +148,7 @@ cli
       tokenAddress,
       '0x' + TezosMessageUtils.writeAddress(to)
     )
-    process.exit();
+    process.exit()
   })
 cli
   .command('unlock <mnemonic> <email> <password> <address>', 'Import')
@@ -160,7 +160,7 @@ cli
       address
     )
     console.log(a.privateKey, a.publicKeyHash)
-    process.exit();
+    process.exit()
   })
 cli.help()
 cli.parse()

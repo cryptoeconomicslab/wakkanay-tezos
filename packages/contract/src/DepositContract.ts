@@ -100,7 +100,10 @@ export class DepositContract implements IDepositContract {
       JSON.stringify(param)
     )
     console.log(
-      `succeed to deposit. open https://arronax.io/tezos/carthagenet/operation_groups/${result.operationGroupID.replace(/"/g, '')}`
+      `succeed to deposit. open https://arronax.io/tezos/carthagenet/operations/${result.operationGroupID.replace(
+        /"/g,
+        ''
+      )}`
     )
     // console.log('invokeContract result:', JSON.stringify(result))
   }
@@ -239,19 +242,22 @@ export class DepositContract implements IDepositContract {
   subscribeCheckpointFinalized(
     handler: (checkpointId: Bytes, checkpoint: [Range, Property]) => void
   ) {
-    this.eventWatcher.subscribe('CheckpointFinalized', (log: EventLog) => {
-      let values = []
-      try {
-        values = log.values.map(v => Bytes.fromHexString(v))
-        const checkpointId = TzCoder.decode(Bytes.default(), values[1])
-        const checkpoint = DepositContract.decodeCheckpoint(values[2])
-        const stateUpdate = checkpoint.stateUpdate
-        const subrange = checkpoint.subrange
-        handler(checkpointId, [subrange, stateUpdate])
-      } catch (e) {
-        console.error('invalid log data', values)
+    this.eventWatcher.subscribe(
+      'CheckpointFinalized',
+      async (log: EventLog) => {
+        let values = []
+        try {
+          values = log.values.map(v => Bytes.fromHexString(v))
+          const checkpointId = TzCoder.decode(Bytes.default(), values[1])
+          const checkpoint = DepositContract.decodeCheckpoint(values[2])
+          const stateUpdate = checkpoint.stateUpdate
+          const subrange = checkpoint.subrange
+          await handler(checkpointId, [subrange, stateUpdate])
+        } catch (e) {
+          console.error('invalid log data', values)
+        }
       }
-    })
+    )
     this.eventWatcher.cancel()
     this.eventWatcher.start(() => {
       // console.log('CheckpointFinalized event polled')
@@ -259,11 +265,14 @@ export class DepositContract implements IDepositContract {
   }
 
   subscribeExitFinalized(handler: (exitId: Bytes) => void) {
-    this.eventWatcher.subscribe(EventType.EXIT_FINALIZED, (log: EventLog) => {
-      const [exitId] = log.values[1].bytes
-      // remove 05
-      handler(Bytes.fromHexString(exitId.slice(2)))
-    })
+    this.eventWatcher.subscribe(
+      EventType.EXIT_FINALIZED,
+      async (log: EventLog) => {
+        const [exitId] = log.values[1].bytes
+        // remove 05
+        await handler(Bytes.fromHexString(exitId.slice(2)))
+      }
+    )
     this.eventWatcher.cancel()
     this.eventWatcher.start(() => {
       console.log('event polled')

@@ -11,7 +11,7 @@ import { TzWallet } from '../'
 
 // TODO: research default limits per operation
 export const DefaultTransactionStorageLimit = 15000
-export const DefaultTransactionGasLimit = 400000
+export const DefaultTransactionGasLimit = 600000
 
 export class ContractManager {
   constructor(readonly tzWallet: TzWallet, readonly contractAddress: Address) {}
@@ -45,15 +45,7 @@ export class ContractManager {
     // BIP44 Derivation Path if signed with hardware, empty if signed with software
     const derivationPath = ''
 
-    const fee: number = (await this.estimateFee()) + 40000
-    /*
-    console.log(
-      'to:',
-      TezosMessageUtils.readAddress(this.contractAddress.data.substr(2))
-    )
-    console.log('fee:', fee)
-    console.log('params:', params)
-    */
+    const fee: number = await this.estimateFee()
     const result = await TezosNodeWriter.sendContractInvocationOperation(
       this.tzWallet.tezosNodeEndpoint,
       this.tzWallet.keyStore,
