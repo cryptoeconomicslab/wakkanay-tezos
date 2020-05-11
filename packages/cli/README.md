@@ -5,14 +5,25 @@
 ### Deposit L1 fund to L2
 
 ```
-node script/addr2hex.js KT1....XXX # When you deployed a new contract.
-cp .sample.env .env
-vi .env # Replace: CONTRACT_BASE58,{DEPOSIT,COMMITMENT,ADJUDICATION}_CONTRACT_ADDERSS
+# Tab A: Common
+node script/addr2hex.js <KT1....XXX>
 lerna clean -y && lerna bootstrap && lerna run build
+
+# Tab B: Aggregator
+cd ../plasma-aggregator
+cp .env.sample .env
+vi .env # Replace: CONTRACT_BASE58,{DEPOSIT,COMMITMENT,ADJUDICATION}_CONTRACT_ADDERSS
+node lib/index.js
+
+# Tab C: CLI
+cp .env.sample .env
+vi .env # Replace: CONTRACT_BASE58,{DEPOSIT,COMMITMENT,ADJUDICATION}_CONTRACT_ADDERSS
 node lib/index.js deposit 1
 ```
 
 ### Confirm your balance in the L1 and L2
+
+It'll take a few minutes to finalize the result of L2 balance increment.
 
 ```
 rm -rf .db && node lib/index.js balance
