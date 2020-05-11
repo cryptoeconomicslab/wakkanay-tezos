@@ -23,6 +23,8 @@ node lib/index.js deposit 1
 
 ### Confirm your balance in the L1 and L2
 
+It'll take a few minutes to finalize the result of L2 balance increment.
+
 ```
 rm -rf .db && node lib/index.js balance
 ```
