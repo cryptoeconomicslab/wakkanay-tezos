@@ -1,6 +1,6 @@
 {
   "name": "@cryptoeconomicslab/tezos-wallet",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "tezos-wallet",
   "author": {
     "name": "Cryptoeconomics Lab",
@@ -50,7 +50,7 @@
   },
   "dependencies": {
     "@cryptoeconomicslab/signature": "0.0.38",
-    "@cryptoeconomicslab/tezos-coder": "^0.0.9",
+    "@cryptoeconomicslab/tezos-coder": "^0.0.10",
     "@cryptoeconomicslab/wallet": "0.0.34",
     "conseiljs": "^0.4.2",
     "lodash.flattendeep": "^4.4.0"

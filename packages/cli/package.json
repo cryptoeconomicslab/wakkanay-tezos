@@ -1,6 +1,6 @@
 {
   "name": "@cryptoeconomicslab/tezos-liteclient-cli",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "CLI for tezos wallet",
   "author": {
     "name": "Cryptoeconomics Lab",
@@ -37,9 +37,9 @@
     "@cryptoeconomicslab/ovm": "0.0.34",
     "@cryptoeconomicslab/plasma-light-client": "0.0.34",
     "@cryptoeconomicslab/primitives": "0.0.34",
-    "@cryptoeconomicslab/tezos-coder": "^0.0.9",
-    "@cryptoeconomicslab/tezos-contract": "^0.0.9",
-    "@cryptoeconomicslab/tezos-wallet": "^0.0.9",
+    "@cryptoeconomicslab/tezos-coder": "^0.0.10",
+    "@cryptoeconomicslab/tezos-contract": "^0.0.10",
+    "@cryptoeconomicslab/tezos-wallet": "^0.0.10",
     "@types/leveldown": "^4.0.2",
     "cac": "^6.5.6",
     "conseiljs": "^0.4.2",
