@@ -112,4 +112,4 @@ temp/
 docs
 
 .db
-
+**/*.lerna_backup

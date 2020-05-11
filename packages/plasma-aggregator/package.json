@@ -1,60 +1,73 @@
 {
-	"name": "@cryptoeconomicslab/tezos-plasma-aggregator",
-	"version": "0.0.9",
-	"description": "tezos-aggregator",
-	"author": {
-		"name": "Cryptoeconomics Lab",
-		"url": "https://www.cryptoeconomicslab.com/"
-	},
-	"engines": {
-		"node": ">=10"
-	},
-	"license": "Apache-2.0",
-	"main": "lib/index.js",
-	"directories": {
-		"lib": "lib"
-	},
-	"files": [
-		"lib"
-	],
-	"publishConfig": {
-		"access": "restricted"
-	},
-	"jest": {
-		"transform": {
-			"^.+\\.tsx?$": "ts-jest"
-		},
-		"testMatch": [
-			"**/__tests__/**/?(*.)+(spec|test).(ts|js)",
-			"**/?(*.)+(spec|test).ts"
-		],
-		"moduleFileExtensions": [
-			"js",
-			"ts"
-		],
-		"globals": {
-			"ts-jest": {
-				"tsConfig": "tsconfig.json"
-			}
-		}
-	},
-	"dependencies": {
-		"@cryptoeconomicslab/coder": "0.0.34",
-		"@cryptoeconomicslab/level-kvs": "^0.0.6",
-		"@cryptoeconomicslab/plasma-aggregator": "0.0.34",
-		"@cryptoeconomicslab/primitives": "0.0.34",
-		"@types/leveldown": "^4.0.2",
-		"conseiljs": "^0.4.2",
-		"dotenv": "^8.2.0",
-		"leveldown": "^5.5.1",
-		"tslib": "^1.10.0"
-	},
-	"peerDependencies": {
-		"@cryptoeconomicslab/primitives": "^0.0.27"
-	},
-	"devDependencies": {
-		"ts-node": "^8.6.2",
-		"typescript": "^3.7.5"
-	},
-	"gitHead": "09fb78d66ccfcd48656b8081e2296b7156594d97"
+  "name": "@cryptoeconomicslab/tezos-plasma-aggregator",
+  "version": "0.0.9",
+  "description": "tezos-aggregator",
+  "author": {
+    "name": "Cryptoeconomics Lab",
+    "url": "https://www.cryptoeconomicslab.com/"
+  },
+  "engines": {
+    "node": ">=10"
+  },
+  "license": "Apache-2.0",
+  "main": "lib/index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "files": [
+    "lib"
+  ],
+  "publishConfig": {
+    "access": "restricted"
+  },
+  "scripts": {
+    "start": "node lib/index",
+    "build": "tsc --build",
+    "build:check": "tsc --noEmit",
+    "test": "jest --passWithNoTests",
+    "lint": "eslint --ext ts,tsx src",
+    "lint:fix": "eslint --ext ts,tsx src --fix",
+    "doc": "typedoc --out docs src",
+    "clean": "rm -rf lib docs"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testMatch": [
+      "**/__tests__/**/?(*.)+(spec|test).(ts|js)",
+      "**/?(*.)+(spec|test).ts"
+    ],
+    "moduleFileExtensions": [
+      "js",
+      "ts"
+    ],
+    "globals": {
+      "ts-jest": {
+        "tsConfig": "tsconfig.json"
+      }
+    }
+  },
+  "dependencies": {
+    "@cryptoeconomicslab/coder": "0.0.34",
+    "@cryptoeconomicslab/level-kvs": "^0.0.6",
+    "@cryptoeconomicslab/plasma-aggregator": "0.0.34",
+    "@cryptoeconomicslab/primitives": "0.0.34",
+    "@cryptoeconomicslab/tezos-coder": "^0.0.9",
+    "@cryptoeconomicslab/tezos-contract": "^0.0.9",
+    "@cryptoeconomicslab/tezos-wallet": "^0.0.9",
+    "@types/leveldown": "^4.0.2",
+    "conseiljs": "^0.4.2",
+    "dotenv": "^8.2.0",
+    "leveldown": "^5.5.1",
+    "tslib": "^1.10.0"
+  },
+  "peerDependencies": {
+    "@cryptoeconomicslab/primitives": "^0.0.27"
+  },
+  "devDependencies": {
+    "ts-node": "^8.6.2",
+    "typescript": "^3.7.5"
+  },
+  "gitHead": "09fb78d66ccfcd48656b8081e2296b7156594d97"
 }

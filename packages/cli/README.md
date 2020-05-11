@@ -5,11 +5,19 @@
 ### Deposit L1 fund to L2
 
 ```
-node script/addr2hex.js KT1....XXX # When you deployed a new contract.
-cp .sample.env .env
-vi .env # Replace: CONTRACT_BASE58,{DEPOSIT,COMMITMENT,ADJUDICATION}_CONTRACT_ADDERSS
+# Tab A: Common
+node script/addr2hex.js <KT1....XXX>
 lerna clean -y && lerna bootstrap && lerna run build
-node ../plasma-aggregator/lib/index.js & >/dev/null 2>&1
+
+# Tab B: Aggregator
+cd ../plasma-aggregator
+cp .env.sample .env
+vi .env # Replace: CONTRACT_BASE58,{DEPOSIT,COMMITMENT,ADJUDICATION}_CONTRACT_ADDERSS
+node lib/index.js
+
+# Tab C: CLI
+cp .env.sample .env
+vi .env # Replace: CONTRACT_BASE58,{DEPOSIT,COMMITMENT,ADJUDICATION}_CONTRACT_ADDERSS
 node lib/index.js deposit 1
 ```
 

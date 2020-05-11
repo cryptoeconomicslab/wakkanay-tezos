@@ -100,7 +100,7 @@ export class DepositContract implements IDepositContract {
       JSON.stringify(param)
     )
     console.log(
-      `succeed to deposit. open https://arronax.io/tezos/carthagenet/operation_group/${result.operationGroupID.replace(
+      `succeed to deposit. open https://arronax.io/tezos/carthagenet/operation_groups/${result.operationGroupID.replace(
         /"/g,
         ''
       )}`
